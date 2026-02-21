@@ -4,6 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Send } from 'lucide-react';
 
+const TELEGRAM_BOT_URL = process.env.NEXT_PUBLIC_TELEGRAM_BOT_URL || 'https://t.me/ArbiLoopBot';
+
 const Footer = () => {
     // Current year for copyright
     const currentYear = new Date().getFullYear();
@@ -76,7 +78,7 @@ const Footer = () => {
                             </a>
 
                             <a
-                                href="https://t.me/ArbiLoopBot"
+                                href={TELEGRAM_BOT_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 text-muted-foreground hover:text-[#2AABEE] transition-colors group w-fit"

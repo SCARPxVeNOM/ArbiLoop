@@ -63,3 +63,20 @@ Recommended constructor on Arbitrum One:
 2. Restart frontend.
 3. Connect wallet on Arbitrum.
 4. Test small `supply`, `borrow`, and `repay` actions.
+
+## 6. Telegram Bot Backend
+
+The frontend Settings page expects a running Telegram bot for `/id`, `/verify`, and settings commands.
+
+Service location:
+- `src/bot`
+
+Configure and run:
+
+```bash
+cd src/bot
+cp .env.example .env
+# fill TELEGRAM_BOT_TOKEN, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+npm install
+npm start
+```

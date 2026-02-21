@@ -6,6 +6,7 @@ ArbiLoop is an Arbitrum-native DeFi automation app for lending, borrowing, and l
 - Frontend dashboard (`src/frontend`)
 - Arbitrum execution vault (`src/contracts/ArbiLoopVaultArbitrum.sol`)
 - Supabase user settings storage (`src/supabase`)
+- Telegram bot backend (`src/bot`)
 
 ## Arbitrum Setup
 1. Configure `src/frontend/.env.local`.
@@ -22,3 +23,4 @@ npm run dev
 ## Deployment Docs
 - `docs/ARBITRUM_HACKATHON.md`
 - `src/contracts/README.md`
+- `src/bot/README.md`

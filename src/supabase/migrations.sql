@@ -27,6 +27,7 @@ create table if not exists public.users (
 
 -- 2. Create Indexes
 create index if not exists idx_users_wallet on public.users(wallet_address);
+create unique index if not exists idx_users_wallet_unique on public.users(wallet_address);
 create index if not exists idx_users_chat_id on public.users(chat_id);
 create index if not exists idx_users_alerts_enabled on public.users(alerts_enabled) where alerts_enabled = true;
 
@@ -34,14 +35,50 @@ create index if not exists idx_users_alerts_enabled on public.users(alerts_enabl
 alter table public.users enable row level security;
 
 -- 4. Create Policies
--- Allow service_role (backend bot) full access
-do $$ 
+-- Clean up old broad policy if present
+do $$
+begin
+  if exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'users'
+      and policyname = 'Service role full access'
+  ) then
+    drop policy "Service role full access" on public.users;
+  end if;
+end $$;
+
+-- Frontend can read settings via anon/authenticated roles
+do $$
 begin
   if not exists (
-    select 1 from pg_policies where policyname = 'Service role full access' and tablename = 'users'
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'users'
+      and policyname = 'Read users'
   ) then
-    create policy "Service role full access" on public.users
+    create policy "Read users" on public.users
+      for select
+      to anon, authenticated
+      using (true);
+  end if;
+end $$;
+
+-- Bot backend writes via service-role key
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'users'
+      and policyname = 'Service role write users'
+  ) then
+    create policy "Service role write users" on public.users
       for all
+      to service_role
       using (true)
       with check (true);
   end if;

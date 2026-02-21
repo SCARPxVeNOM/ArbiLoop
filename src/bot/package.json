@@ -1,0 +1,16 @@
+{
+  "name": "arbi-loop-telegram-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "dev": "node --watch src/index.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "dotenv": "^17.2.3",
+    "telegraf": "^4.16.3",
+    "viem": "^2.45.1"
+  }
+}
