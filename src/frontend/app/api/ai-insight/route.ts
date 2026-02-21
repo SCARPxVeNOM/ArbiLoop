@@ -3,10 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     try {
-        const { portfolio, userSettings } = await req.json();
-
-        // Extract user threshold (default 1.1 if missing)
-        const threshold = userSettings?.alert_threshold || 1.1;
+        const { portfolio } = await req.json();
 
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
@@ -31,7 +28,6 @@ export async function POST(req: Request) {
       
       **Protocol Health:**
       - Aave: HF ${portfolio.aave?.health?.toFixed(2)} (Supply: $${portfolio.aave?.supply?.toFixed(2)}, Borrow: $${portfolio.aave?.borrow?.toFixed(2)})
-      - Kinza: HF ${portfolio.kinza?.health?.toFixed(2)} (Supply: $${portfolio.kinza?.supply?.toFixed(2)}, Borrow: $${portfolio.kinza?.borrow?.toFixed(2)})
       - Radiant: HF ${portfolio.radiant?.health?.toFixed(2)} (Supply: $${portfolio.radiant?.supply?.toFixed(2)}, Borrow: $${portfolio.radiant?.borrow?.toFixed(2)})
 
       **Detailed Positions:**

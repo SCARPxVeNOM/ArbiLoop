@@ -49,7 +49,7 @@ function Counter({ value, prefix = '', suffix = '' }: { value: number, prefix?: 
 
 export function LendHeader() {
     const { data: yields } = useYields();
-    const { totalBorrowPowerUSD, totalDebtUSD, aave, kinza, radiant, isLoading } = useAggregatedHealth();
+    const { totalBorrowPowerUSD, totalDebtUSD, aave, radiant, isLoading } = useAggregatedHealth();
 
     // The user wants a 5% safety margin: Max Safe = Power * 0.95
     const maxSafeBorrowPower = totalBorrowPowerUSD * 0.95;
@@ -164,11 +164,7 @@ export function LendHeader() {
                             <div className="flex flex-wrap md:flex-nowrap justify-center md:justify-between mt-4 text-[8px] md:text-[10px] font-bold uppercase tracking-wider text-muted-foreground gap-2 md:gap-4">
                                 <div className="flex items-center gap-1.5 bg-white/[0.03] border border-white/5 px-2 py-1.5 rounded-lg">
                                     <div className="w-1.5 h-1.5 rounded-full bg-[#F0B90B] shadow-[0_0_8px_rgba(240,185,11,0.5)]" />
-                                    <span>{getProtocolLabel('aave')}: <span className="text-white/90">{formatMoney(aave.debtUSD)}</span> / <span className="text-white/60">{formatMoney(aave.borrowPowerUSD * 0.95)}</span></span>
-                                </div>
-                                <div className="flex items-center gap-1.5 bg-white/[0.03] border border-white/5 px-2 py-1.5 rounded-lg">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                                    <span>{getProtocolLabel('kinza-finance')}: <span className="text-white/90">{formatMoney(kinza.debtUSD)}</span> / <span className="text-white/60">{formatMoney(kinza.borrowPowerUSD * 0.95)}</span></span>
+                                    <span>{getProtocolLabel('aave-v3')}: <span className="text-white/90">{formatMoney(aave.debtUSD)}</span> / <span className="text-white/60">{formatMoney(aave.borrowPowerUSD * 0.95)}</span></span>
                                 </div>
                                 <div className="flex items-center gap-1.5 bg-white/[0.03] border border-white/5 px-2 py-1.5 rounded-lg">
                                     <div className="w-1.5 h-1.5 rounded-full bg-[#A855F7] shadow-[0_0_8px_rgba(168,85,247,0.5)]" />

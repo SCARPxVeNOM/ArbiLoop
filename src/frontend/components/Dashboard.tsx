@@ -7,7 +7,6 @@ import { Markets } from "@/components/Markets"
 import { useAccount } from 'wagmi';
 import { useAggregatedHealth } from "@/hooks/useAggregatedHealth";
 import { useAavePortfolio } from "@/hooks/useAavePortfolio";
-import { useKinzaPortfolio } from "@/hooks/useKinzaPortfolio";
 import { useRadiantPortfolio } from "@/hooks/useRadiantPortfolio";
 import { TrendingUp, AlertTriangle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -36,10 +35,9 @@ export function Dashboard() {
 
     // 3. Fetch Portfolio Data
     const aave = useAavePortfolio();
-    const kinza = useKinzaPortfolio();
     const radiant = useRadiantPortfolio();
 
-    const isDashboardLoading = healthData.isLoading || aave.isLoading || kinza.isLoading || radiant.isLoading;
+    const isDashboardLoading = healthData.isLoading || aave.isLoading || radiant.isLoading;
 
     // Financial calculations - Memoized to prevent constant rendering
     const stats = useMemo(() => {
@@ -61,14 +59,13 @@ export function Dashboard() {
             return (netAnnual / netWorth) * 100;
         };
 
-        const totalSupplied = aave.totalSupplyUSD + kinza.totalSupplyUSD + radiant.totalSupplyUSD;
-        const totalBorrowed = aave.totalBorrowUSD + kinza.totalBorrowUSD + radiant.totalBorrowUSD;
+        const totalSupplied = aave.totalSupplyUSD + radiant.totalSupplyUSD;
+        const totalBorrowed = aave.totalBorrowUSD + radiant.totalBorrowUSD;
         const totalNetWorth = totalSupplied - totalBorrowed;
 
-        const allPositions = [...(aave.positions || []), ...(kinza.positions || []), ...(radiant.positions || [])];
+        const allPositions = [...(aave.positions || []), ...(radiant.positions || [])];
         const globalNetAPY = calculateNetAPY(allPositions, totalNetWorth);
         const aaveNetAPY = calculateNetAPY(aave.positions || [], aave.totalSupplyUSD - aave.totalBorrowUSD);
-        const kinzaNetAPY = calculateNetAPY(kinza.positions || [], kinza.totalSupplyUSD - kinza.totalBorrowUSD);
         const radiantNetAPY = calculateNetAPY(radiant.positions || [], radiant.totalSupplyUSD - radiant.totalBorrowUSD);
 
         return {
@@ -77,13 +74,12 @@ export function Dashboard() {
             totalNetWorth,
             globalNetAPY,
             aaveNetAPY,
-            kinzaNetAPY,
             radiantNetAPY,
             allPositions
         };
-    }, [aave, kinza, radiant]);
+    }, [aave, radiant]);
 
-    const { totalSupplied, totalBorrowed, totalNetWorth, globalNetAPY, aaveNetAPY, kinzaNetAPY, radiantNetAPY, allPositions } = stats;
+    const { totalSupplied, totalBorrowed, totalNetWorth, globalNetAPY, aaveNetAPY, radiantNetAPY, allPositions } = stats;
 
     // Prepare data for AI Agent - Memoized to prevent frequent re-renders of AIInsights
     const portfolioForAI = {
@@ -92,7 +88,6 @@ export function Dashboard() {
         totalBorrowed,
         globalNetAPY,
         aave: { supply: aave.totalSupplyUSD, borrow: aave.totalBorrowUSD, health: healthData.aave.healthFactor },
-        kinza: { supply: kinza.totalSupplyUSD, borrow: kinza.totalBorrowUSD, health: healthData.kinza.healthFactor },
         radiant: { supply: radiant.totalSupplyUSD, borrow: radiant.totalBorrowUSD, health: healthData.radiant.healthFactor },
         positions: allPositions
     };
@@ -245,20 +240,12 @@ export function Dashboard() {
             <div className="grid gap-4 md:grid-cols-3">
                 {[
                     {
-                        name: getProtocolLabel('aave'),
-                        img: getProtocolIcon('aave') || '/aave.png',
+                        name: getProtocolLabel('aave-v3'),
+                        img: getProtocolIcon('aave-v3') || '/aave.png',
                         supply: aave.totalSupplyUSD,
                         borrow: aave.totalBorrowUSD,
                         health: healthData.aave,
                         apy: aaveNetAPY,
-                    },
-                    {
-                        name: getProtocolLabel('kinza-finance'),
-                        img: getProtocolIcon('kinza-finance') || '/kinza.png',
-                        supply: kinza.totalSupplyUSD,
-                        borrow: kinza.totalBorrowUSD,
-                        health: healthData.kinza,
-                        apy: kinzaNetAPY,
                     },
                     {
                         name: getProtocolLabel('radiant-v2'),

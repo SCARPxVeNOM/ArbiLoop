@@ -45,7 +45,7 @@ export function InfoModal({ isOpen, onClose }: InfoModalProps) {
                                         <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-emerald-400 transition-colors" />
                                     </h4>
                                     <p className="text-xs text-muted-foreground leading-relaxed">
-                                        Deposit your idle assets into audited protocols like Aave, Kinza, and Radiant. Your assets earn interest from borrowers and protocol rewards.
+                                        Deposit your idle assets into audited protocols like Aave and Radiant. Your assets earn interest from borrowers and protocol rewards.
                                     </p>
                                 </div>
                             </div>

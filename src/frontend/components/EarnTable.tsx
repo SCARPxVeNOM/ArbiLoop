@@ -5,7 +5,6 @@ import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useAccount } from 'wagmi';
 import { useYields } from "@/hooks/useYields";
 import { useAavePortfolio } from '@/hooks/useAavePortfolio';
-import { useKinzaPortfolio } from '@/hooks/useKinzaPortfolio';
 import { useRadiantPortfolio } from '@/hooks/useRadiantPortfolio';
 import { AssetIcon } from "@/components/ui/asset-icon";
 import { ChevronRight, LayoutGrid, List, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
@@ -18,7 +17,6 @@ export function EarnTable() {
     const { address } = useAccount();
     const { data: yields, isLoading: isYieldsLoading } = useYields();
     const { positions: aavePositions, isLoading: isAaveLoading } = useAavePortfolio();
-    const { positions: kinzaPositions, isLoading: isKinzaLoading } = useKinzaPortfolio();
     const { positions: radiantPositions, isLoading: isRadiantLoading } = useRadiantPortfolio();
 
     const [selectedPool, setSelectedPool] = useState<any>(null);
@@ -59,7 +57,7 @@ export function EarnTable() {
         }
     };
 
-    const isLoading = isYieldsLoading || (!!address && (isAaveLoading || isKinzaLoading || isRadiantLoading));
+    const isLoading = isYieldsLoading || (!!address && (isAaveLoading || isRadiantLoading));
 
     // Map positions for O(1) lookup: key = `${protocol}-${symbol}`
     const positionMap = useMemo(() => {
@@ -78,17 +76,14 @@ export function EarnTable() {
         };
 
         aavePositions.forEach((pos: any) => {
-            addPosition(`aave-${pos.symbol}`.toUpperCase(), pos);
-        });
-        kinzaPositions.forEach((pos: any) => {
-            addPosition(`kinza-finance-${pos.symbol}`.toUpperCase(), pos);
+            addPosition(`aave-v3-${pos.symbol}`.toUpperCase(), pos);
         });
         radiantPositions.forEach((pos: any) => {
             addPosition(`radiant-v2-${pos.symbol}`.toUpperCase(), pos);
         });
 
         return map;
-    }, [aavePositions, kinzaPositions, radiantPositions]);
+    }, [aavePositions, radiantPositions]);
 
     const earningsData = useMemo(() => {
         if (!yields) return [];

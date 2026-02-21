@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { LandingCTA } from "@/components/LandingCTA";
 import { Button } from "@/components/ui/button";
-import { AssetIcon } from "@/components/ui/asset-icon";
-import { LoopSelector } from "@/components/LoopSelector";
 import { TopLoops } from "@/components/TopLoops";
 import { RiskMonitor } from "@/components/RiskMonitor";
 import { LiquidationAlerts } from "@/components/LiquidationAlerts";
@@ -56,7 +54,6 @@ export default function LandingPage() {
                 <span className="text-sm font-bold tracking-widest uppercase text-muted-foreground">Powered By</span>
                 <div className="h-8 w-auto flex items-center gap-2 font-bold text-xl">Aave</div>
                 <div className="h-8 w-auto flex items-center gap-2 font-bold text-xl">Radiant</div>
-                <div className="h-8 w-auto flex items-center gap-2 font-bold text-xl">Kinza</div>
               </div>
             </div>
 
@@ -185,7 +182,7 @@ export default function LandingPage() {
                 {[
                   { step: '01', title: 'Connect Wallet', desc: 'Link your MetaMask, TrustWallet, or any Web3 wallet securely.' },
                   { step: '02', title: 'Link Telegram', desc: 'Set up alerts to get notified when your Health Factor drops.' },
-                  { step: '03', title: 'Monitor & Manage', desc: 'Track positions across Aave, Kinza, and Radiant. Take action when needed.' }
+                  { step: '03', title: 'Monitor & Manage', desc: 'Track positions across Aave and Radiant. Take action when needed.' }
                 ].map((s, i) => (
                   <div key={i} className="flex gap-8 items-start relative">
                     <div className="h-14 w-14 shrink-0 rounded-full bg-[#CEFF00] text-black font-bold text-xl flex items-center justify-center shadow-[0_0_15px_rgba(206,255,0,0.5)] z-10">

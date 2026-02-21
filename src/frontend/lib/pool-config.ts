@@ -2,7 +2,7 @@ import { parseAbi } from 'viem';
 import allowedAssets from '@/lib/allowedAssets.json';
 import { isArbitrumTarget } from '@/lib/network';
 
-type ProtocolKey = 'aave' | 'kinza' | 'radiant';
+type ProtocolKey = 'aave' | 'radiant';
 type AllowedAsset = {
     symbol?: string;
     originalSymbol?: string;
@@ -29,9 +29,11 @@ function toAddress(value: string | undefined, fallback: `0x${string}` = ZERO_ADD
 // Legacy export kept for compatibility; disabled in Arbitrum-only mode.
 export const AAVE_COMPTROLLER = ZERO_ADDRESS;
 
-export const KINZA_POOL = toAddress(process.env.NEXT_PUBLIC_AAVE_POOL_ADDRESS, DEFAULT_AAVE_POOL);
-export const KINZA_DATA_PROVIDER = toAddress(process.env.NEXT_PUBLIC_AAVE_DATA_PROVIDER_ADDRESS, DEFAULT_AAVE_DATA_PROVIDER);
+export const AAVE_POOL = toAddress(process.env.NEXT_PUBLIC_AAVE_POOL_ADDRESS, DEFAULT_AAVE_POOL);
+export const AAVE_DATA_PROVIDER = toAddress(process.env.NEXT_PUBLIC_AAVE_DATA_PROVIDER_ADDRESS, DEFAULT_AAVE_DATA_PROVIDER);
+export const AAVE_GATEWAY = toAddress(process.env.NEXT_PUBLIC_AAVE_GATEWAY_ADDRESS, DEFAULT_AAVE_GATEWAY);
 export const RADIANT_LENDING_POOL = toAddress(process.env.NEXT_PUBLIC_RADIANT_POOL_ADDRESS, DEFAULT_RADIANT_POOL);
+export const RADIANT_GATEWAY = toAddress(process.env.NEXT_PUBLIC_RADIANT_GATEWAY_ADDRESS, DEFAULT_RADIANT_GATEWAY);
 export const DEX_ROUTER = toAddress(process.env.NEXT_PUBLIC_DEX_ROUTER_ADDRESS, DEFAULT_DEX_ROUTER);
 
 export const LOOP_VAULT_ADDRESS = toAddress(process.env.NEXT_PUBLIC_LOOP_VAULT_ADDRESS);
@@ -58,8 +60,8 @@ export const UNDERLYING_TOKENS: Record<string, `0x${string}`> = ARBITRUM_UNDERLY
 export function getUnderlyingAddress(symbol: string, project: string): `0x${string}` | undefined {
     if (symbol === 'ETH' || symbol === 'WETH') return WRAPPED_NATIVE;
 
-    const protocolKey: ProtocolKey | null = project === 'aave' ? 'aave' :
-        (project === 'kinza-finance' || project === 'kinza' || project === 'aave-v3') ? 'kinza' :
+    const protocolKey: ProtocolKey | null =
+        (project === 'aave-v3' || project === 'aave') ? 'aave' :
             (project === 'radiant-v2' || project === 'radiant') ? 'radiant' : null;
 
     const typedAllowedAssets = allowedAssets as AllowedAssetsByProtocol;
@@ -79,12 +81,7 @@ export function getUnderlyingAddress(symbol: string, project: string): `0x${stri
 }
 
 export function getProtocolAddress(project: string, symbol: string): `0x${string}` | undefined {
-    if (project === 'aave') {
-        return AAVE_VTOKENS[symbol];
-    }
-    if (project === 'kinza-finance' || project === 'kinza' || project === 'aave-v3') {
-        return KINZA_POOL;
-    }
+    if (project === 'aave-v3' || project === 'aave') return AAVE_POOL;
     if (project === 'radiant-v2' || project === 'radiant') {
         return RADIANT_LENDING_POOL;
     }
@@ -92,8 +89,7 @@ export function getProtocolAddress(project: string, symbol: string): `0x${string
 }
 
 export function getApprovalTarget(project: string, symbol: string): `0x${string}` | undefined {
-    if (project === 'aave') return AAVE_VTOKENS[symbol];
-    if (project === 'kinza-finance' || project === 'kinza' || project === 'aave-v3') return KINZA_POOL;
+    if (project === 'aave-v3' || project === 'aave') return AAVE_POOL;
     if (project === 'radiant-v2' || project === 'radiant') return RADIANT_LENDING_POOL;
     return undefined;
 }
@@ -138,7 +134,7 @@ export const VETH_ABI = parseAbi([
     'function borrowBalanceStored(address account) view returns (uint256)',
 ]);
 
-export const KINZA_POOL_ABI = parseAbi([
+export const AAVE_POOL_ABI = parseAbi([
     'function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)',
     'function withdraw(address asset, uint256 amount, address to) returns (uint256)',
     'function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf)',
@@ -166,12 +162,9 @@ export const WETH_GATEWAY_ABI = parseAbi([
     'function repayETH(address lendingPool, uint256 amount, uint256 rateMode, address onBehalfOf) payable',
 ]);
 
-export const KINZA_GATEWAY = toAddress(process.env.NEXT_PUBLIC_AAVE_GATEWAY_ADDRESS, DEFAULT_AAVE_GATEWAY);
-export const RADIANT_GATEWAY = toAddress(process.env.NEXT_PUBLIC_RADIANT_GATEWAY_ADDRESS, DEFAULT_RADIANT_GATEWAY);
-
-export const LENDING_POOL_ABI = KINZA_POOL_ABI;
+export const LENDING_POOL_ABI = AAVE_POOL_ABI;
 
 export const LOOP_VAULT_ABI = parseAbi([
-    'function leverageKinza(address inputToken, address supplyAsset, address borrowAsset, uint256 amount, uint256 legacyExtraAmount, uint256 borrowAmount, address legacyRouteHint) payable',
+    'function leverageAave(address inputToken, address supplyAsset, address borrowAsset, uint256 amount, uint256 legacyExtraAmount, uint256 borrowAmount, address legacyRouteHint) payable',
     'function leverageRadiant(address inputToken, address supplyAsset, address borrowAsset, uint256 amount, uint256 legacyExtraAmount, uint256 borrowAmount, address legacyRouteHint) payable'
 ]);

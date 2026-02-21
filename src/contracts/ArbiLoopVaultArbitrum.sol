@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 /**
  * @title ArbiLoopVaultArbitrum
  * @notice Lightweight Arbitrum loop executor for Aave-compatible pools.
- * @dev Keeps legacy frontend signatures for leverage calls.
+ * @dev Exposes dedicated Aave and Radiant leverage entrypoints.
  */
 
 interface IERC20Lite {
@@ -46,7 +46,7 @@ contract ArbiLoopVaultArbitrum {
         owner = newOwner;
     }
 
-    function leverageKinza(
+    function leverageAave(
         address inputToken,
         address supplyAsset,
         address borrowAsset,
@@ -110,4 +110,3 @@ contract ArbiLoopVaultArbitrum {
         }
     }
 }
-

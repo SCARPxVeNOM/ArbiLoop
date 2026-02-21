@@ -23,7 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import {
     getUnderlyingAddress,
     ERC20_ABI,
-    KINZA_POOL,
+    AAVE_POOL,
     RADIANT_LENDING_POOL,
 } from '@/lib/pool-config';
 import { formatUnits, parseUnits } from 'viem';
@@ -38,7 +38,7 @@ interface StrategyModalProps {
     isOpen: boolean;
     onClose: () => void;
     initialData?: {
-        protocol: 'aave' | 'kinza' | 'radiant';
+        protocol: 'aave-v3' | 'radiant-v2';
         supplyAsset: string;
         borrowAsset: string;
     };
@@ -62,7 +62,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
     };
 
     // -- State --
-    const [protocol, setProtocol] = useState<'aave' | 'kinza' | 'radiant'>(isArbitrumFamily ? 'kinza' : 'aave');
+    const [protocol, setProtocol] = useState<'aave-v3' | 'radiant-v2'>('aave-v3');
     const [tokenA, setTokenA] = useState('USDC'); // Supply
     const [tokenB, setTokenB] = useState('USDT'); // Borrow
     const [inputToken, setInputToken] = useState(initialData?.supplyAsset || 'USDT');
@@ -81,7 +81,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
 
     const assetAddress = useMemo(() => {
         if (isPayingWithNative) return getUnderlyingAddress(tokenA, protocol);
-        return getUnderlyingAddress(inputToken, protocol) || getUnderlyingAddress(inputToken, 'aave');
+        return getUnderlyingAddress(inputToken, protocol) || getUnderlyingAddress(inputToken, 'aave-v3');
     }, [inputToken, isPayingWithNative, tokenA, protocol]);
 
     const { data: allowance } = useReadContract({
@@ -242,10 +242,6 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
             toast({ title: "RPC Not Ready", description: "Public client unavailable. Retry in a moment.", variant: "destructive" });
             return;
         }
-        if (isArbitrumFamily && protocol === 'aave') {
-            toast({ title: "Unsupported Protocol", description: "Aave loops are disabled in Arbitrum mode.", variant: "destructive" });
-            return;
-        }
         if (isArbitrumFamily && inputTokenAddr.toLowerCase() !== supplyAssetAddr.toLowerCase()) {
             toast({
                 title: "Unsupported Input Pair",
@@ -353,17 +349,17 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                 }
             }
 
-            // Step 2: Credit delegation for Kinza / Radiant (borrow on behalf of user)
+            // Step 2: Credit delegation for Aave / Radiant (borrow on behalf of user)
             // The user approves the vault to take debt on their behalf
-            if (protocol === 'kinza' || protocol === 'radiant') {
+            if (protocol === 'aave-v3' || protocol === 'radiant-v2') {
                 setTxStep('approving');
 
                 // Get the variable debt token address from the lending pool
-                    const poolAddr = protocol === 'kinza' ? KINZA_POOL : RADIANT_LENDING_POOL;
+                    const poolAddr = protocol === 'aave-v3' ? AAVE_POOL : RADIANT_LENDING_POOL;
                     if (poolAddr === ZERO_ADDRESS) {
                         toast({
                             title: "Protocol Not Configured",
-                            description: `Set ${protocol === 'kinza' ? 'NEXT_PUBLIC_AAVE_POOL_ADDRESS' : 'NEXT_PUBLIC_RADIANT_POOL_ADDRESS'} first.`,
+                            description: `Set ${protocol === 'aave-v3' ? 'NEXT_PUBLIC_AAVE_POOL_ADDRESS' : 'NEXT_PUBLIC_RADIANT_POOL_ADDRESS'} first.`,
                             variant: "destructive"
                         });
                         return;
@@ -407,22 +403,16 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
             setTxStep('executing');
             const txValue = isPayingWithNative ? rawAmount : BigInt(0);
 
-            if (protocol === 'aave') {
-                toast({
-                    title: "Unsupported Protocol",
-                    description: "Aave execution is not available in the Arbitrum vault. Switch to Kinza or Radiant.",
-                    variant: "destructive",
-                });
-                return;
-            } else if (protocol === 'kinza') {
+            if (protocol === 'aave-v3') {
+                // Contract wrapper name kept for backward compatibility.
                 await writeContractAsync({
                     address: LOOP_VAULT_ADDRESS,
                     abi: LOOP_VAULT_ABI,
-                    functionName: 'leverageKinza',
+                    functionName: 'leverageAave',
                     args: [inputTokenAddr, supplyAssetAddr, borrowAssetAddr, rawAmount, rawFlashAmount, rawBorrowAmount, legacyRouteHint],
                     value: txValue,
                 });
-            } else if (protocol === 'radiant') {
+            } else if (protocol === 'radiant-v2') {
                 await writeContractAsync({
                     address: LOOP_VAULT_ADDRESS,
                     abi: LOOP_VAULT_ABI,
@@ -432,9 +422,10 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                 });
             }
 
+            const protocolLabel = protocol === 'aave-v3' ? 'Aave V3' : 'Radiant';
             toast({
                 title: "Strategy Executed!",
-                description: `${tokenA}/${tokenB} loop at ${leverage.toFixed(1)}x on ${protocol}. Flash: $${(flashAmountFloat * priceA).toFixed(2)}, Fees: ~$${totalFeesUSD.toFixed(2)}`,
+                description: `${tokenA}/${tokenB} loop at ${leverage.toFixed(1)}x on ${protocolLabel}. Flash: $${(flashAmountFloat * priceA).toFixed(2)}, Fees: ~$${totalFeesUSD.toFixed(2)}`,
             });
             onClose();
 
@@ -487,7 +478,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                                 {tokenA} / {tokenB} Strategy
                             </DialogTitle>
                             <DialogDescription className="text-xs text-muted-foreground mt-1">
-                                Execute a multi-step loop on {protocol.toUpperCase()}
+                                Execute a multi-step loop on {protocol === 'aave-v3' ? 'Aave V3' : 'Radiant'}
                             </DialogDescription>
                         </div>
                         <div className="flex items-center gap-2">

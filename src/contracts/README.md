@@ -30,5 +30,5 @@ Recommended `poolAddress` (Arbitrum One):
 ## Notes
 
 - Vault accepts ERC20 input; native ETH is not accepted directly.
-- Frontend-compatible wrappers are included: `leverageKinza`, `leverageRadiant`.
+- Frontend-compatible wrappers are included: `leverageAave`, `leverageRadiant`.
 - Wrapper params `legacy extra amount and legacy route hint` are accepted for compatibility and ignored in Arbitrum execution path.

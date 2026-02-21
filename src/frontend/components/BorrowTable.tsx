@@ -9,7 +9,6 @@ import { Card } from "@/components/ui/card";
 import { MarketModal } from "./MarketModal";
 import { formatMoney } from "@/lib/utils";
 import { useAavePortfolio } from "@/hooks/useAavePortfolio";
-import { useKinzaPortfolio } from "@/hooks/useKinzaPortfolio";
 import { useRadiantPortfolio } from "@/hooks/useRadiantPortfolio";
 import { ACTIVE_PROTOCOLS, getProtocolIcon, getProtocolLabel } from '@/lib/protocols';
 
@@ -55,7 +54,6 @@ export function BorrowTable() {
 
     // Fetch User Portfolios
     const { positions: aavePositions = [] } = useAavePortfolio();
-    const { positions: kinzaPositions = [] } = useKinzaPortfolio();
     const { positions: radiantPositions = [] } = useRadiantPortfolio();
 
     // Map positions for O(1) lookup: key = `${protocol}-${symbol}`
@@ -75,17 +73,14 @@ export function BorrowTable() {
         };
 
         aavePositions.forEach((pos: any) => {
-            addPosition(`aave-${pos.symbol}`.toUpperCase(), pos);
-        });
-        kinzaPositions.forEach((pos: any) => {
-            addPosition(`kinza-finance-${pos.symbol}`.toUpperCase(), pos);
+            addPosition(`aave-v3-${pos.symbol}`.toUpperCase(), pos);
         });
         radiantPositions.forEach((pos: any) => {
             addPosition(`radiant-v2-${pos.symbol}`.toUpperCase(), pos);
         });
 
         return map;
-    }, [aavePositions, kinzaPositions, radiantPositions]);
+    }, [aavePositions, radiantPositions]);
 
     const borrowData = useMemo(() => {
         if (!yields) return [];

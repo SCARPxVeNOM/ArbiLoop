@@ -6,8 +6,7 @@ export interface ProtocolMeta {
 }
 
 const ARBITRUM_PROTOCOLS: ProtocolMeta[] = [
-    // Keep the internal id `kinza-finance` for compatibility with existing app logic.
-    { id: 'kinza-finance', label: 'Aave V3', icon: '/kinza.png', sourceProjects: ['aave-v3'] },
+    { id: 'aave-v3', label: 'Aave V3', icon: '/aave.png', sourceProjects: ['aave-v3'] },
     { id: 'radiant-v2', label: 'Radiant', icon: '/radiant.jpeg', sourceProjects: ['radiant-v2'] },
 ];
 
@@ -24,7 +23,11 @@ const sourceToAppProjectEntries = ACTIVE_PROTOCOLS.flatMap((protocol) =>
 export const SOURCE_PROJECT_TO_APP_PROJECT = new Map(sourceToAppProjectEntries);
 
 export function normalizeProject(sourceProject: string): string {
-    return SOURCE_PROJECT_TO_APP_PROJECT.get(sourceProject) || sourceProject;
+    const normalized = SOURCE_PROJECT_TO_APP_PROJECT.get(sourceProject);
+    if (normalized) return normalized;
+    if (sourceProject === 'aave') return 'aave-v3';
+    if (sourceProject === 'radiant') return 'radiant-v2';
+    return sourceProject;
 }
 
 export function getProtocolMetaByProject(project: string): ProtocolMeta | undefined {
@@ -34,8 +37,10 @@ export function getProtocolMetaByProject(project: string): ProtocolMeta | undefi
 
 export function getProtocolLabel(project: string): string {
     const fallbackLabels: Record<string, string> = {
-        'kinza-finance': 'Aave V3',
+        'aave-v3': 'Aave V3',
+        'aave': 'Aave V3',
         'radiant-v2': 'Radiant',
+        'radiant': 'Radiant',
     };
     return getProtocolMetaByProject(project)?.label || fallbackLabels[project] || project;
 }

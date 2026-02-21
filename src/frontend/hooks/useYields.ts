@@ -63,7 +63,7 @@ export function useYields() {
 
             filtered.forEach(pool => {
                 const symbol = NORMALIZE_SYMBOL[pool.symbol] || pool.symbol;
-                const project = normalizeProject(pool.project.includes('aave') ? 'aave' : pool.project);
+                const project = normalizeProject(pool.project);
                 const key = `${project}-${symbol}`;
 
                 if (aggregatedMap.has(key)) {

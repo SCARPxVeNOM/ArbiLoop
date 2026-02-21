@@ -33,9 +33,7 @@ async function main() {
   const env = loadEnv(envPath);
   const vault = env.NEXT_PUBLIC_LOOP_VAULT_ADDRESS;
   const privateKey = env.PRIVATE_KEY;
-  const deployHash =
-    env.LOOP_VAULT_DEPLOY_TX_HASH ||
-    '0x37085c6f6d5b85633978b72a9399652df172d60c9a6cd1924e06911069abb6ff';
+  const deployHash = env.LOOP_VAULT_DEPLOY_TX_HASH;
 
   if (!vault || !privateKey) {
     throw new Error('Missing NEXT_PUBLIC_LOOP_VAULT_ADDRESS or PRIVATE_KEY in .env.local');
@@ -68,7 +66,7 @@ async function main() {
   const VAULT_ABI = parseAbi([
     'function owner() view returns (address)',
     'function pool() view returns (address)',
-    'function leverageKinza(address inputToken,address supplyAsset,address borrowAsset,uint256 amount,uint256 legacyExtraAmount,uint256 borrowAmount,address legacyRouteHint) payable',
+    'function leverageAave(address inputToken,address supplyAsset,address borrowAsset,uint256 amount,uint256 legacyExtraAmount,uint256 borrowAmount,address legacyRouteHint) payable',
     'function setOwner(address newOwner)',
   ]);
 
@@ -90,19 +88,23 @@ async function main() {
   console.log('deployer key matches owner:', owner.toLowerCase() === account.address.toLowerCase());
   console.log('wallet balance ETH:', formatEther(balance));
 
-  try {
-    const receipt = await publicClient.getTransactionReceipt({ hash: deployHash });
-    console.log('deploy tx status:', receipt.status);
-    console.log('deploy tx contract:', receipt.contractAddress);
-  } catch {
-    console.log('deploy receipt lookup: skipped/unavailable');
+  if (deployHash) {
+    try {
+      const receipt = await publicClient.getTransactionReceipt({ hash: deployHash });
+      console.log('deploy tx status:', receipt.status);
+      console.log('deploy tx contract:', receipt.contractAddress);
+    } catch {
+      console.log('deploy receipt lookup: skipped/unavailable');
+    }
+  } else {
+    console.log('deploy receipt lookup: skipped (no LOOP_VAULT_DEPLOY_TX_HASH)');
   }
 
   try {
     await publicClient.estimateContractGas({
       address: vaultAddr,
       abi: VAULT_ABI,
-      functionName: 'leverageKinza',
+      functionName: 'leverageAave',
       args: [
         '0x0000000000000000000000000000000000000001',
         '0x0000000000000000000000000000000000000001',

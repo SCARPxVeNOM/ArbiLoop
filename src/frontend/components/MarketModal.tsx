@@ -35,7 +35,7 @@ export function MarketModal({ isOpen, onClose, initialMode, pool }: MarketModalP
         setTimeout(() => setIsSwitching(false), 300);
     };
 
-    const protocolDisplay = pool.project === 'aave' ? 'Aave' : pool.project === 'kinza-finance' ? 'Kinza' : 'Radiant';
+    const protocolDisplay = pool.project === 'aave-v3' ? 'Aave V3' : 'Radiant';
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -51,10 +51,10 @@ export function MarketModal({ isOpen, onClose, initialMode, pool }: MarketModalP
                                 <AssetIcon symbol={pool.symbol} className="w-9 h-9 md:w-11 md:h-11 shadow-2xl" />
                                 <div className={cn(
                                     "absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 rounded-full border border-white/20 flex items-center justify-center p-0.5 z-10 shadow-lg",
-                                    pool.project === 'aave' ? "bg-[#F0B90B]" : pool.project === 'kinza-finance' ? "bg-[#3B82F6]" : "bg-[#A855F7]"
+                                    pool.project === 'aave-v3' ? "bg-[#F0B90B]" : "bg-[#A855F7]"
                                 )}>
                                     <img
-                                        src={pool.project === 'aave' ? '/aave.png' : pool.project === 'kinza-finance' ? '/kinza.png' : '/radiant.jpeg'}
+                                        src={pool.project === 'aave-v3' ? '/aave.png' : '/radiant.jpeg'}
                                         className="w-full h-full object-contain rounded-full"
                                         alt={protocolDisplay}
                                     />

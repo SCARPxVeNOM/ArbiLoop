@@ -1,278 +1,186 @@
 {
-  "aave": [
-    {
-      "symbol": "ETH",
-      "originalSymbol": "WETH",
-      "poolId": "aave-v3-eth",
-      "project": "aave-v3",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.75,
-      "underlyingTokens": [
-        "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
-      ]
-    },
-    {
-      "symbol": "USDC",
-      "originalSymbol": "USDC",
-      "poolId": "aave-v3-usdc",
-      "project": "aave-v3",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
-      ]
-    },
-    {
-      "symbol": "USDT",
-      "originalSymbol": "USDT",
-      "poolId": "aave-v3-usdt",
-      "project": "aave-v3",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9"
-      ]
-    },
-    {
-      "symbol": "DAI",
-      "originalSymbol": "DAI",
-      "poolId": "aave-v3-dai",
-      "project": "aave-v3",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1"
-      ]
-    },
-    {
-      "symbol": "WBTC",
-      "originalSymbol": "WBTC",
-      "poolId": "aave-v3-wbtc",
-      "project": "aave-v3",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.7,
-      "underlyingTokens": [
-        "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f"
-      ]
-    }
-  ],
-  "kinza": [
-    {
-      "symbol": "ETH",
-      "originalSymbol": "WETH",
-      "poolId": "kinza-eth",
-      "project": "kinza-finance",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.75,
-      "underlyingTokens": [
-        "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
-      ]
-    },
-    {
-      "symbol": "USDC",
-      "originalSymbol": "USDC",
-      "poolId": "kinza-usdc",
-      "project": "kinza-finance",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
-      ]
-    },
-    {
-      "symbol": "USDT",
-      "originalSymbol": "USDT",
-      "poolId": "kinza-usdt",
-      "project": "kinza-finance",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9"
-      ]
-    },
-    {
-      "symbol": "DAI",
-      "originalSymbol": "DAI",
-      "poolId": "kinza-dai",
-      "project": "kinza-finance",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1"
-      ]
-    },
-    {
-      "symbol": "WBTC",
-      "originalSymbol": "WBTC",
-      "poolId": "kinza-wbtc",
-      "project": "kinza-finance",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.7,
-      "underlyingTokens": [
-        "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f"
-      ]
-    }
-  ],
-  "radiant": [
-    {
-      "symbol": "ETH",
-      "originalSymbol": "WETH",
-      "poolId": "radiant-eth",
-      "project": "radiant-v2",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.75,
-      "underlyingTokens": [
-        "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
-      ]
-    },
-    {
-      "symbol": "USDC",
-      "originalSymbol": "USDC",
-      "poolId": "radiant-usdc",
-      "project": "radiant-v2",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
-      ]
-    },
-    {
-      "symbol": "USDT",
-      "originalSymbol": "USDT",
-      "poolId": "radiant-usdt",
-      "project": "radiant-v2",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9"
-      ]
-    },
-    {
-      "symbol": "DAI",
-      "originalSymbol": "DAI",
-      "poolId": "radiant-dai",
-      "project": "radiant-v2",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.8,
-      "underlyingTokens": [
-        "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1"
-      ]
-    },
-    {
-      "symbol": "WBTC",
-      "originalSymbol": "WBTC",
-      "poolId": "radiant-wbtc",
-      "project": "radiant-v2",
-      "tvlUsd": 0,
-      "apy": 0,
-      "apyBase": 0,
-      "apyReward": 0,
-      "apyBaseBorrow": 0,
-      "apyRewardBorrow": 0,
-      "totalSupplyUsd": 0,
-      "totalBorrowUsd": 0,
-      "ltv": 0.7,
-      "underlyingTokens": [
-        "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f"
-      ]
-    }
-  ]
+    "aave":  [
+                 {
+                     "symbol":  "ETH",
+                     "originalSymbol":  "WETH",
+                     "poolId":  "aave-v3-eth",
+                     "project":  "aave-v3",
+                     "tvlUsd":  0,
+                     "apy":  0,
+                     "apyBase":  0,
+                     "apyReward":  0,
+                     "apyBaseBorrow":  0,
+                     "apyRewardBorrow":  0,
+                     "totalSupplyUsd":  0,
+                     "totalBorrowUsd":  0,
+                     "ltv":  0.75,
+                     "underlyingTokens":  [
+                                              "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
+                                          ]
+                 },
+                 {
+                     "symbol":  "USDC",
+                     "originalSymbol":  "USDC",
+                     "poolId":  "aave-v3-usdc",
+                     "project":  "aave-v3",
+                     "tvlUsd":  0,
+                     "apy":  0,
+                     "apyBase":  0,
+                     "apyReward":  0,
+                     "apyBaseBorrow":  0,
+                     "apyRewardBorrow":  0,
+                     "totalSupplyUsd":  0,
+                     "totalBorrowUsd":  0,
+                     "ltv":  0.8,
+                     "underlyingTokens":  [
+                                              "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+                                          ]
+                 },
+                 {
+                     "symbol":  "USDT",
+                     "originalSymbol":  "USDT",
+                     "poolId":  "aave-v3-usdt",
+                     "project":  "aave-v3",
+                     "tvlUsd":  0,
+                     "apy":  0,
+                     "apyBase":  0,
+                     "apyReward":  0,
+                     "apyBaseBorrow":  0,
+                     "apyRewardBorrow":  0,
+                     "totalSupplyUsd":  0,
+                     "totalBorrowUsd":  0,
+                     "ltv":  0.8,
+                     "underlyingTokens":  [
+                                              "0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9"
+                                          ]
+                 },
+                 {
+                     "symbol":  "DAI",
+                     "originalSymbol":  "DAI",
+                     "poolId":  "aave-v3-dai",
+                     "project":  "aave-v3",
+                     "tvlUsd":  0,
+                     "apy":  0,
+                     "apyBase":  0,
+                     "apyReward":  0,
+                     "apyBaseBorrow":  0,
+                     "apyRewardBorrow":  0,
+                     "totalSupplyUsd":  0,
+                     "totalBorrowUsd":  0,
+                     "ltv":  0.8,
+                     "underlyingTokens":  [
+                                              "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1"
+                                          ]
+                 },
+                 {
+                     "symbol":  "WBTC",
+                     "originalSymbol":  "WBTC",
+                     "poolId":  "aave-v3-wbtc",
+                     "project":  "aave-v3",
+                     "tvlUsd":  0,
+                     "apy":  0,
+                     "apyBase":  0,
+                     "apyReward":  0,
+                     "apyBaseBorrow":  0,
+                     "apyRewardBorrow":  0,
+                     "totalSupplyUsd":  0,
+                     "totalBorrowUsd":  0,
+                     "ltv":  0.7,
+                     "underlyingTokens":  [
+                                              "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f"
+                                          ]
+                 }
+             ],
+    "radiant":  [
+                    {
+                        "symbol":  "ETH",
+                        "originalSymbol":  "WETH",
+                        "poolId":  "radiant-eth",
+                        "project":  "radiant-v2",
+                        "tvlUsd":  0,
+                        "apy":  0,
+                        "apyBase":  0,
+                        "apyReward":  0,
+                        "apyBaseBorrow":  0,
+                        "apyRewardBorrow":  0,
+                        "totalSupplyUsd":  0,
+                        "totalBorrowUsd":  0,
+                        "ltv":  0.75,
+                        "underlyingTokens":  [
+                                                 "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1"
+                                             ]
+                    },
+                    {
+                        "symbol":  "USDC",
+                        "originalSymbol":  "USDC",
+                        "poolId":  "radiant-usdc",
+                        "project":  "radiant-v2",
+                        "tvlUsd":  0,
+                        "apy":  0,
+                        "apyBase":  0,
+                        "apyReward":  0,
+                        "apyBaseBorrow":  0,
+                        "apyRewardBorrow":  0,
+                        "totalSupplyUsd":  0,
+                        "totalBorrowUsd":  0,
+                        "ltv":  0.8,
+                        "underlyingTokens":  [
+                                                 "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+                                             ]
+                    },
+                    {
+                        "symbol":  "USDT",
+                        "originalSymbol":  "USDT",
+                        "poolId":  "radiant-usdt",
+                        "project":  "radiant-v2",
+                        "tvlUsd":  0,
+                        "apy":  0,
+                        "apyBase":  0,
+                        "apyReward":  0,
+                        "apyBaseBorrow":  0,
+                        "apyRewardBorrow":  0,
+                        "totalSupplyUsd":  0,
+                        "totalBorrowUsd":  0,
+                        "ltv":  0.8,
+                        "underlyingTokens":  [
+                                                 "0xFd086bC7CD5C481DCC9C85ebe478A1C0b69FCbb9"
+                                             ]
+                    },
+                    {
+                        "symbol":  "DAI",
+                        "originalSymbol":  "DAI",
+                        "poolId":  "radiant-dai",
+                        "project":  "radiant-v2",
+                        "tvlUsd":  0,
+                        "apy":  0,
+                        "apyBase":  0,
+                        "apyReward":  0,
+                        "apyBaseBorrow":  0,
+                        "apyRewardBorrow":  0,
+                        "totalSupplyUsd":  0,
+                        "totalBorrowUsd":  0,
+                        "ltv":  0.8,
+                        "underlyingTokens":  [
+                                                 "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1"
+                                             ]
+                    },
+                    {
+                        "symbol":  "WBTC",
+                        "originalSymbol":  "WBTC",
+                        "poolId":  "radiant-wbtc",
+                        "project":  "radiant-v2",
+                        "tvlUsd":  0,
+                        "apy":  0,
+                        "apyBase":  0,
+                        "apyReward":  0,
+                        "apyBaseBorrow":  0,
+                        "apyRewardBorrow":  0,
+                        "totalSupplyUsd":  0,
+                        "totalBorrowUsd":  0,
+                        "ltv":  0.7,
+                        "underlyingTokens":  [
+                                                 "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f"
+                                             ]
+                    }
+                ]
 }

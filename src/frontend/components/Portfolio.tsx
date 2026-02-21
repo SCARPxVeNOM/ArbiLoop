@@ -10,7 +10,6 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { useAggregatedHealth, ProtocolHealth } from "@/hooks/useAggregatedHealth";
 import { useAavePortfolio } from "@/hooks/useAavePortfolio";
-import { useKinzaPortfolio } from "@/hooks/useKinzaPortfolio";
 import { useRadiantPortfolio } from "@/hooks/useRadiantPortfolio";
 import { TrendingUp, AlertTriangle, ShieldCheck, ChevronDown, ChevronUp, Heart, Activity, Loader2 } from "lucide-react";
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
@@ -95,16 +94,15 @@ export function Portfolio() {
 
     // Portfolio Data
     const { totalSupplyUSD: aaveSupply, totalBorrowUSD: aaveBorrow, positions: aavePositions } = useAavePortfolio();
-    const { totalSupplyUSD: kinzaSupply, totalBorrowUSD: kinzaBorrow, positions: kinzaPositions } = useKinzaPortfolio();
     const { totalSupplyUSD: radiantSupply, totalBorrowUSD: radiantBorrow, positions: radiantPositions } = useRadiantPortfolio();
 
     // Health Data
     const healthData = useAggregatedHealth(walletAddress as `0x${string}` | undefined);
-    const { aave: aaveHealth, kinza: kinzaHealth, radiant: radiantHealth, overallScore } = healthData;
+    const { aave: aaveHealth, radiant: radiantHealth, overallScore } = healthData;
 
     // Aggregations
-    const totalSupplied = aaveSupply + kinzaSupply + radiantSupply;
-    const totalDebt = aaveBorrow + kinzaBorrow + radiantBorrow;
+    const totalSupplied = aaveSupply + radiantSupply;
+    const totalDebt = aaveBorrow + radiantBorrow;
     const totalNetWorth = totalSupplied - totalDebt;
 
     // Helper to calculate Net APY
@@ -126,16 +124,14 @@ export function Portfolio() {
         return (netAnnual / netWorth) * 100;
     };
 
-    const allPositions = [...(aavePositions || []), ...(kinzaPositions || []), ...(radiantPositions || [])];
+    const allPositions = [...(aavePositions || []), ...(radiantPositions || [])];
     const globalNetAPY = calculateNetAPY(allPositions, totalNetWorth);
     const aaveNetAPY = calculateNetAPY(aavePositions || [], aaveSupply - aaveBorrow);
-    const kinzaNetAPY = calculateNetAPY(kinzaPositions || [], kinzaSupply - kinzaBorrow);
     const radiantNetAPY = calculateNetAPY(radiantPositions || [], radiantSupply - radiantBorrow);
 
     // Allocation data with extra info for tooltip
     const allocationData = [
-        { name: 'Aave', value: aaveSupply, supply: aaveSupply, borrow: aaveBorrow, color: '#F0B90B', percent: 0 },
-        { name: 'Kinza', value: kinzaSupply, supply: kinzaSupply, borrow: kinzaBorrow, color: '#3B82F6', percent: 0 },
+        { name: 'Aave V3', value: aaveSupply, supply: aaveSupply, borrow: aaveBorrow, color: '#F0B90B', percent: 0 },
         { name: 'Radiant', value: radiantSupply, supply: radiantSupply, borrow: radiantBorrow, color: '#A855F7', percent: 0 },
     ].filter(d => d.value > 0);
 
@@ -150,7 +146,7 @@ export function Portfolio() {
     // Health status summary
     const getOverallStatus = () => {
         if (totalNetWorth < 0.01) return { text: 'Inactive', color: 'text-muted-foreground', icon: Activity };
-        const activeProtocols = [aaveHealth, kinzaHealth, radiantHealth].filter(h => h.hasPositions);
+        const activeProtocols = [aaveHealth, radiantHealth].filter(h => h.hasPositions);
         const anyDanger = activeProtocols.some(h => h.status === 'danger');
         const anyWarning = activeProtocols.some(h => h.status === 'warning');
         if (anyDanger) return { text: 'At Risk', color: 'text-red-500 animate-pulse', icon: AlertTriangle };
@@ -207,7 +203,7 @@ export function Portfolio() {
 
     const renderPositionsTable = (positions: any[], protocolId: string) => {
         const handleRedirect = (asset: string, protocol: string, type: 'earn' | 'borrow') => {
-            const mappedProtocol = protocol === 'kinza' ? 'kinza-finance' : protocol === 'radiant' ? 'radiant-v2' : protocol;
+            const mappedProtocol = protocol === 'aave' ? 'aave-v3' : protocol === 'radiant' ? 'radiant-v2' : protocol;
             router.push(`/lend/${type}?asset=${asset}&protocol=${mappedProtocol}`);
         };
 
@@ -224,7 +220,6 @@ export function Portfolio() {
                             <th className="py-3 px-4 md:px-8">Asset</th>
                             <th className="py-3 px-4 text-right">APY</th>
                             <th className="py-3 px-4 text-center hidden md:table-cell">Supplied</th>
-                            {protocolId === 'aave' && <th className="py-3 px-1 md:px-4 text-center">Collateral</th>}
                             <th className="py-3 px-4 text-right hidden md:table-cell">Borrowed</th>
                             <th className="py-3 px-4 text-right hidden md:table-cell">Value (USD)</th>
                         </tr>
@@ -259,25 +254,6 @@ export function Portfolio() {
                                         <div className="text-emerald-500 font-bold">{pos.supply > 0 ? pos.supply.toFixed(4) : '-'}</div>
                                         {pos.supplyUSD > 0 && <div className="text-[10px] text-muted-foreground/60 font-mono">${pos.supplyUSD.toFixed(2)}</div>}
                                     </td>
-                                    {protocolId === 'aave' && (
-                                        <td className="py-3 px-1 md:px-4 text-center" onClick={(e) => e.stopPropagation()}>
-                                            <div className="flex justify-center items-center">
-                                                {pos.supply > 0 ? (
-                                                    togglingAssets[pos.vTokenAddress] ? (
-                                                        <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                                                    ) : (
-                                                        <Switch
-                                                            checked={pos.isCollateral}
-                                                            onCheckedChange={() => handleCollateralToggle(pos.vTokenAddress, pos.symbol, pos.isCollateral)}
-                                                            disabled={togglingAssets[pos.vTokenAddress]}
-                                                        />
-                                                    )
-                                                ) : (
-                                                    <span className="text-muted-foreground/30 text-[10px]">—</span>
-                                                )}
-                                            </div>
-                                        </td>
-                                    )}
                                     <td className="py-3 px-4 text-right hidden md:table-cell">
                                         <div className="text-red-400 font-bold">{pos.borrow > 0 ? pos.borrow.toFixed(4) : '-'}</div>
                                         {pos.borrowUSD > 0 && <div className="text-[10px] text-muted-foreground/60 font-mono">${pos.borrowUSD.toFixed(2)}</div>}
@@ -342,24 +318,6 @@ export function Portfolio() {
                                         {pos.borrowUSD > 0 && <div className="text-[9px] text-muted-foreground/40 font-bold">${pos.borrowUSD.toFixed(2)}</div>}
                                     </div>
                                 </div>
-
-                                {protocolId === 'aave' && pos.supply > 0 && (
-                                    <div className="mt-3 flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-xl px-3 py-2" onClick={(e) => e.stopPropagation()}>
-                                        <div className="flex flex-col">
-                                            <span className="text-[9px] uppercase text-muted-foreground/60 font-black tracking-widest">Collateral Mode</span>
-                                            <span className="text-[10px] text-blue-400/80 font-bold italic">Required for Borrowing</span>
-                                        </div>
-                                        {togglingAssets[pos.vTokenAddress] ? (
-                                            <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                                        ) : (
-                                            <Switch
-                                                checked={pos.isCollateral}
-                                                onCheckedChange={() => handleCollateralToggle(pos.vTokenAddress, pos.symbol, pos.isCollateral)}
-                                                disabled={togglingAssets[pos.vTokenAddress]}
-                                            />
-                                        )}
-                                    </div>
-                                )}
                             </div>
                         );
                     })}
@@ -369,8 +327,7 @@ export function Portfolio() {
     };
 
     const protocols = [
-        { id: 'aave', name: 'Aave', img: '/aave.png', supply: aaveSupply, borrow: aaveBorrow, health: aaveHealth, positions: aavePositions, utilization: aaveHealth.borrowPowerUSD > 0 ? (aaveHealth.debtUSD / aaveHealth.borrowPowerUSD) * 100 : 0, apy: aaveNetAPY },
-        { id: 'kinza', name: 'Kinza', img: '/kinza.png', supply: kinzaSupply, borrow: kinzaBorrow, health: kinzaHealth, positions: kinzaPositions, utilization: kinzaHealth.borrowPowerUSD > 0 ? (kinzaHealth.debtUSD / kinzaHealth.borrowPowerUSD) * 100 : 0, apy: kinzaNetAPY },
+        { id: 'aave', name: 'Aave V3', img: '/aave.png', supply: aaveSupply, borrow: aaveBorrow, health: aaveHealth, positions: aavePositions, utilization: aaveHealth.borrowPowerUSD > 0 ? (aaveHealth.debtUSD / aaveHealth.borrowPowerUSD) * 100 : 0, apy: aaveNetAPY },
         { id: 'radiant', name: 'Radiant', img: '/radiant.jpeg', supply: radiantSupply, borrow: radiantBorrow, health: radiantHealth, positions: radiantPositions, utilization: radiantHealth.borrowPowerUSD > 0 ? (radiantHealth.debtUSD / radiantHealth.borrowPowerUSD) * 100 : 0, apy: radiantNetAPY },
     ];
 
@@ -551,7 +508,7 @@ export function Portfolio() {
                                     <TrendingUp className="opacity-50" />
                                 </div>
                                 <span className="text-sm font-medium">No active positions</span>
-                                <span className="text-xs opacity-50 text-center px-4">Assets supplied to Aave, Kinza, or Radiant will appear here.</span>
+                                <span className="text-xs opacity-50 text-center px-4">Assets supplied to Aave and Radiant will appear here.</span>
                             </div>
                         )}
                     </CardContent>
@@ -728,4 +685,5 @@ export function Portfolio() {
         </div>
     );
 }
+
 

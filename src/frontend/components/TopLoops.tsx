@@ -269,7 +269,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     initialData={{
-                        protocol: selectedLoop.protocol as 'aave' | 'kinza' | 'radiant',
+                        protocol: selectedLoop.protocol as 'aave-v3' | 'radiant-v2',
                         supplyAsset: selectedLoop.supplyAsset,
                         borrowAsset: selectedLoop.borrowAsset
                     }}

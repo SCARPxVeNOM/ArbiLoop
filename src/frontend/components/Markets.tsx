@@ -13,13 +13,9 @@ export function Markets() {
     const { data: yields, isLoading } = useYields();
     const [sortBy, setSortBy] = useState<'tvl' | 'apy'>('tvl');
     const protocolConfig = useMemo(() => ({
-        aave: {
-            label: getProtocolLabel('aave'),
-            icon: getProtocolIcon('aave') || '/aave.png',
-        },
-        kinza: {
-            label: getProtocolLabel('kinza-finance'),
-            icon: getProtocolIcon('kinza-finance') || '/kinza.png',
+        aaveV3: {
+            label: getProtocolLabel('aave-v3'),
+            icon: getProtocolIcon('aave-v3') || '/aave.png',
         },
         radiant: {
             label: getProtocolLabel('radiant-v2'),
@@ -33,8 +29,7 @@ export function Markets() {
 
         const map: Record<string, {
             symbol: string;
-            aave?: { s: number, b: number, tvl: number };
-            kinza?: { s: number, b: number, tvl: number };
+            aaveV3?: { s: number, b: number, tvl: number };
             radiant?: { s: number, b: number, tvl: number };
             totalSupplied: number;
             totalBorrowed: number;
@@ -53,8 +48,7 @@ export function Markets() {
             const entry = map[symbol];
 
             // Update Protocol Data
-            if (pool.project === 'aave') entry.aave = data;
-            if (pool.project === 'kinza-finance') entry.kinza = data;
+            if (pool.project === 'aave-v3') entry.aaveV3 = data;
             if (pool.project === 'radiant-v2') entry.radiant = data;
 
             // Update Aggregates
@@ -133,20 +127,9 @@ export function Markets() {
                                     <div className="flex flex-col items-center justify-center gap-1">
                                         <div className="flex items-center gap-1.5">
                                             <div className="w-4 h-4 rounded-full overflow-hidden bg-white">
-                                                <img src={protocolConfig.aave.icon} className="w-full h-full object-cover" alt={protocolConfig.aave.label} />
+                                                <img src={protocolConfig.aaveV3.icon} className="w-full h-full object-cover" alt={protocolConfig.aaveV3.label} />
                                             </div>
-                                            {protocolConfig.aave.label}
-                                        </div>
-                                        <span className="text-[9px] opacity-70">Earn / Pay</span>
-                                    </div>
-                                </th>
-                                <th className="h-12 px-4 align-middle font-medium text-center">
-                                    <div className="flex flex-col items-center justify-center gap-1">
-                                        <div className="flex items-center gap-1.5">
-                                            <div className="w-4 h-4 rounded-full overflow-hidden bg-white">
-                                                <img src={protocolConfig.kinza.icon} className="w-full h-full object-cover" alt={protocolConfig.kinza.label} />
-                                            </div>
-                                            {protocolConfig.kinza.label}
+                                            {protocolConfig.aaveV3.label}
                                         </div>
                                         <span className="text-[9px] opacity-70">Earn / Pay</span>
                                     </div>
@@ -167,7 +150,7 @@ export function Markets() {
                         </thead>
                         <tbody className="[&_tr:last-child]:border-0">
                             {marketData.map(asset => {
-                                const availableProviders = [asset.aave, asset.kinza, asset.radiant].filter(Boolean).length;
+                                const availableProviders = [asset.aaveV3, asset.radiant].filter(Boolean).length;
                                 const renderCell = (data?: { s: number, b: number }, isBest?: boolean) => {
                                     if (!data) return <span className="text-muted-foreground/20">-</span>;
                                     const showBest = isBest && data.s >= 0.01 && availableProviders > 1; // Only show if APY >= 0.01% AND multiple providers exist
@@ -204,10 +187,7 @@ export function Markets() {
                                             </div>
                                         </td>
                                         <td className="p-4 align-middle text-center border-l border-border bg-muted/20 group-hover:bg-transparent transition-colors">
-                                            {renderCell(asset.aave, asset.maxAPY === asset.aave?.s)}
-                                        </td>
-                                        <td className="p-4 align-middle text-center border-l border-border bg-muted/20 group-hover:bg-transparent transition-colors">
-                                            {renderCell(asset.kinza, asset.maxAPY === asset.kinza?.s)}
+                                            {renderCell(asset.aaveV3, asset.maxAPY === asset.aaveV3?.s)}
                                         </td>
                                         <td className="p-4 align-middle text-center border-l border-border bg-muted/20 group-hover:bg-transparent transition-colors">
                                             {renderCell(asset.radiant, asset.maxAPY === asset.radiant?.s)}
@@ -235,14 +215,13 @@ export function Markets() {
                     {/* Mobile Card View */}
                     <div className="md:hidden space-y-3">
                         {marketData.map(asset => {
-                            const availableProviders = [asset.aave, asset.kinza, asset.radiant].filter(Boolean).length;
+                            const availableProviders = [asset.aaveV3, asset.radiant].filter(Boolean).length;
                             const renderMobileCell = (label: string, data?: { s: number, b: number }, isBest?: boolean) => {
                                 if (!data) return null;
                                 return (
                                     <div className="flex flex-col items-center bg-muted/20 p-2 rounded-lg flex-1">
                                         <div className="flex items-center gap-1 mb-1">
-                                            {label === protocolConfig.aave.label && <img src={protocolConfig.aave.icon} className="w-3 h-3 rounded-full" alt={protocolConfig.aave.label} />}
-                                            {label === protocolConfig.kinza.label && <img src={protocolConfig.kinza.icon} className="w-3 h-3 rounded-full" alt={protocolConfig.kinza.label} />}
+                                            {label === protocolConfig.aaveV3.label && <img src={protocolConfig.aaveV3.icon} className="w-3 h-3 rounded-full" alt={protocolConfig.aaveV3.label} />}
                                             {label === protocolConfig.radiant.label && <img src={protocolConfig.radiant.icon} className="w-3 h-3 rounded-full" alt={protocolConfig.radiant.label} />}
                                             <span className="text-[10px] text-muted-foreground">{label}</span>
                                         </div>
@@ -270,8 +249,7 @@ export function Markets() {
                                     </div>
 
                                     <div className="flex gap-2">
-                                        {renderMobileCell(protocolConfig.aave.label, asset.aave, asset.maxAPY === asset.aave?.s)}
-                                        {renderMobileCell(protocolConfig.kinza.label, asset.kinza, asset.maxAPY === asset.kinza?.s)}
+                                        {renderMobileCell(protocolConfig.aaveV3.label, asset.aaveV3, asset.maxAPY === asset.aaveV3?.s)}
                                         {renderMobileCell(protocolConfig.radiant.label, asset.radiant, asset.maxAPY === asset.radiant?.s)}
                                     </div>
 

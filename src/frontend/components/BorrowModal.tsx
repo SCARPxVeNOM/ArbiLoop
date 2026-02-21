@@ -9,17 +9,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useBalance } from "wagmi";
 import { parseUnits, formatUnits, maxUint256 } from "viem";
 import {
-    AAVE_VTOKENS, VTOKEN_ABI, VETH_ABI, ERC20_ABI,
-    KINZA_POOL, KINZA_POOL_ABI,
+    ERC20_ABI,
+    AAVE_POOL, AAVE_POOL_ABI,
     RADIANT_LENDING_POOL, RADIANT_POOL_ABI,
-    WETH_GATEWAY_ABI, KINZA_GATEWAY, RADIANT_GATEWAY,
+    WETH_GATEWAY_ABI, AAVE_GATEWAY, RADIANT_GATEWAY,
     getUnderlyingAddress, getApprovalTarget,
 } from "@/lib/pool-config";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatMoney, formatSmallNumber, getTokenDecimals, toPlainString, cn } from "@/lib/utils";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useAavePortfolio } from "@/hooks/useAavePortfolio";
-import { useKinzaPortfolio } from "@/hooks/useKinzaPortfolio";
 import { useRadiantPortfolio } from "@/hooks/useRadiantPortfolio";
 import { useToast } from "@/components/ui/use-toast";
 import { useAggregatedHealth } from "@/hooks/useAggregatedHealth";
@@ -61,15 +60,13 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
     const [isStatsExpanded, setIsStatsExpanded] = useState(false);
 
     // Protocol detection
-    const isAave = pool.project === 'aave';
-    const isKinza = pool.project === 'kinza-finance';
+    const isAave = pool.project === 'aave-v3';
     const isRadiant = pool.project === 'radiant-v2';
     const isNative = pool.symbol === 'ETH' || pool.symbol === 'WETH';
     const decimals = getTokenDecimals(pool.symbol);
-    const vTokenAddress = isAave ? AAVE_VTOKENS[pool.symbol] : undefined;
     const underlyingAddress = getUnderlyingAddress(pool.symbol, pool.project);
     const approvalTarget = getApprovalTarget(pool.project, pool.symbol);
-    const protocolDisplay = isAave ? 'Aave' : isKinza ? 'Kinza' : isRadiant ? 'Radiant' : pool.project;
+    const protocolDisplay = isAave ? 'Aave V3' : isRadiant ? 'Radiant' : pool.project;
 
     // Prices
     const { data: prices } = useTokenPrices();
@@ -78,7 +75,6 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
 
     // Portfolio data
     const { positions: aavePositions = [], refetch: refetchAave } = useAavePortfolio();
-    const { positions: kinzaPositions = [], refetch: refetchKinza } = useKinzaPortfolio();
     const { positions: radiantPositions = [], refetch: refetchRadiant } = useRadiantPortfolio();
 
     let borrowedAmount = 0;
@@ -86,7 +82,6 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
     const findPosition = (positions: PositionLike[]) => positions.find((p) => p.symbol === pool.symbol);
 
     if (isAave) { const pos = findPosition(aavePositions as PositionLike[]); borrowedAmount = pos?.borrow || 0; borrowedAmountUSD = pos?.borrowUSD || 0; }
-    else if (isKinza) { const pos = findPosition(kinzaPositions as PositionLike[]); borrowedAmount = pos?.borrow || 0; borrowedAmountUSD = pos?.borrowUSD || 0; }
     else if (isRadiant) { const pos = findPosition(radiantPositions as PositionLike[]); borrowedAmount = pos?.borrow || 0; borrowedAmountUSD = pos?.borrowUSD || 0; }
 
     if (borrowedAmount === 0 && pool.userBorrowed && pool.userBorrowed > 0) {
@@ -110,8 +105,8 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
         query: { enabled: !!address && !isNative && !!underlyingAddress && !!approvalTarget && activeTab === 'repay' }
     });
 
-    const { aave, kinza, radiant, refetch: refetchHealth } = useAggregatedHealth();
-    const activeHealth = isAave ? aave : isKinza ? kinza : radiant;
+    const { aave, radiant, refetch: refetchHealth } = useAggregatedHealth();
+    const activeHealth = isAave ? aave : radiant;
     const protocolDebt = activeHealth.debtUSD;
     const protocolPower = activeHealth.borrowPowerUSD;
 
@@ -135,8 +130,8 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
     useEffect(() => {
-        if (isConfirmed) {
-            if (step === 'approving') {
+            if (isConfirmed) {
+                if (step === 'approving') {
                 queueMicrotask(() => setStep('idle'));
                 refetchAllowance();
                 toast({
@@ -146,13 +141,13 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
             }
             else {
                 queueMicrotask(() => setStep("success"));
-                refetchAave?.(); refetchKinza?.(); refetchRadiant?.();
+                refetchAave?.(); refetchRadiant?.();
                 refetchNative?.(); refetchToken?.(); refetchAllowance?.(); refetchHealth?.();
             }
         } else if (isConfirming || isPending) {
             if (step !== 'approving' && step !== 'success') queueMicrotask(() => setStep("mining"));
         }
-    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchKinza, refetchRadiant, refetchNative, refetchToken, refetchHealth, activeTab, toast]);
+    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchRadiant, refetchNative, refetchToken, refetchHealth, activeTab, toast]);
 
     const handleAction = () => {
         if (!isConnected) { openConnectModal?.(); return; }
@@ -161,17 +156,18 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
 
         try {
             if (activeTab === 'borrow') {
-                if (isAave && vTokenAddress) {
-                    if (isNative) writeContract({ address: vTokenAddress, abi: VETH_ABI, functionName: 'borrow', args: [amountBig] });
-                    else writeContract({ address: vTokenAddress, abi: VTOKEN_ABI, functionName: 'borrow', args: [amountBig] });
-                } else if (isKinza || isRadiant) {
-                    const poolAddress = isKinza ? KINZA_POOL : RADIANT_LENDING_POOL;
+                if (isAave || isRadiant) {
+                    const poolAddress = isAave ? AAVE_POOL : RADIANT_LENDING_POOL;
                     if (isNative) {
-                        const gatewayAddress = isKinza ? KINZA_GATEWAY : RADIANT_GATEWAY;
+                        const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
                         if (gatewayAddress) writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'borrowETH', args: [poolAddress, amountBig, BigInt(2), 0] });
                     } else {
-                        if (isKinza) writeContract({ address: KINZA_POOL, abi: KINZA_POOL_ABI, functionName: 'borrow', args: [underlyingAddress!, amountBig, BigInt(2), 0, address!] });
-                        else writeContract({ address: RADIANT_LENDING_POOL, abi: RADIANT_POOL_ABI, functionName: 'borrow', args: [underlyingAddress!, amountBig, BigInt(2), 0, address!] });
+                        writeContract({
+                            address: poolAddress,
+                            abi: isAave ? AAVE_POOL_ABI : RADIANT_POOL_ABI,
+                            functionName: 'borrow',
+                            args: [underlyingAddress!, amountBig, BigInt(2), 0, address!]
+                        });
                     }
                 }
             } else {
@@ -183,19 +179,20 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
                         return;
                     }
                 }
-                if (isAave && vTokenAddress) {
-                    if (isNative) writeContract({ address: vTokenAddress, abi: VETH_ABI, functionName: 'repayBorrow', value: amountBig });
-                    else writeContract({ address: vTokenAddress, abi: VTOKEN_ABI, functionName: 'repayBorrow', args: [amountBig] });
-                } else if (isKinza || isRadiant) {
-                    const poolAddress = isKinza ? KINZA_POOL : RADIANT_LENDING_POOL;
+                if (isAave || isRadiant) {
+                    const poolAddress = isAave ? AAVE_POOL : RADIANT_LENDING_POOL;
                     if (isNative) {
-                        const gatewayAddress = isKinza ? KINZA_GATEWAY : RADIANT_GATEWAY;
+                        const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
                         // For repaying native asset, we must send value and call repayETH
                         if (gatewayAddress) writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'repayETH', args: [poolAddress, amountBig, BigInt(2), address!], value: amountBig });
                     } else {
                         const assetAddr = underlyingAddress!;
-                        if (isKinza) writeContract({ address: KINZA_POOL, abi: KINZA_POOL_ABI, functionName: 'repay', args: [assetAddr, amountBig, BigInt(2), address!] });
-                        else writeContract({ address: RADIANT_LENDING_POOL, abi: RADIANT_POOL_ABI, functionName: 'repay', args: [assetAddr, amountBig, BigInt(2), address!] });
+                        writeContract({
+                            address: poolAddress,
+                            abi: isAave ? AAVE_POOL_ABI : RADIANT_POOL_ABI,
+                            functionName: 'repay',
+                            args: [assetAddr, amountBig, BigInt(2), address!]
+                        });
                     }
                 }
             }

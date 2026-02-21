@@ -75,7 +75,7 @@ export default function PrivacyPolicy() {
                             </p>
                             <ul className="list-disc pl-5 mt-2 space-y-1">
                                 <li>To provide real-time portfolio tracking and health factor monitoring.</li>
-                                <li>To facilitate interactions with third-party DeFi protocols (e.g., Aave, Kinza, Radiant).</li>
+                                <li>To facilitate interactions with third-party DeFi protocols (e.g., Aave, Radiant).</li>
                                 <li>To send you alerts via our Telegram bot (only if you explicitly opt-in and link your wallet).</li>
                                 <li>To identify and resolve technical issues or bugs.</li>
                             </ul>

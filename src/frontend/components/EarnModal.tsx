@@ -10,16 +10,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useReadContracts, useBalance } from "wagmi";
 import { parseUnits, formatUnits, maxUint256 } from "viem";
 import {
-    AAVE_VTOKENS, VTOKEN_ABI, VETH_ABI, ERC20_ABI,
-    KINZA_POOL, KINZA_POOL_ABI,
+    ERC20_ABI,
+    AAVE_POOL, AAVE_POOL_ABI, AAVE_DATA_PROVIDER,
     RADIANT_LENDING_POOL, RADIANT_POOL_ABI,
-    WETH_GATEWAY_ABI, KINZA_GATEWAY, RADIANT_GATEWAY,
+    WETH_GATEWAY_ABI, AAVE_GATEWAY, RADIANT_GATEWAY,
     getUnderlyingAddress, getApprovalTarget,
 } from "@/lib/pool-config";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatMoney, formatSmallNumber, getTokenDecimals, toPlainString, cn } from "@/lib/utils";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
-import { useAaveCollateral } from "@/hooks/useAaveCollateral";
 import { useAggregatedHealth } from "@/hooks/useAggregatedHealth";
 
 interface EarnModalProps {
@@ -53,22 +52,15 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
     const { data: prices } = useTokenPrices();
 
     // Protocol detection
-    const isAave = pool.project === 'aave';
-    const isKinza = pool.project === 'kinza-finance';
+    const isAave = pool.project === 'aave-v3';
     const isRadiant = pool.project === 'radiant-v2';
     const isNative = pool.symbol === 'ETH' || pool.symbol === 'WETH';
     const decimals = getTokenDecimals(pool.symbol);
     const tokenPrice = prices ? prices.getPrice(pool.symbol) : 0;
 
-    // Aave-specific addresses
-    const vTokenAddress = isAave ? AAVE_VTOKENS[pool.symbol] : undefined;
-
     // Underlying token address (for ERC20 balance + approval)
     const underlyingAddress = getUnderlyingAddress(pool.symbol, pool.project);
     const approvalTarget = getApprovalTarget(pool.project, pool.symbol);
-
-    // Aave collateral awareness
-    const collateral = useAaveCollateral(pool.symbol);
 
     // Transaction hooks
     const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useWriteContract();
@@ -96,24 +88,25 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
     }
 
     // DEPOSITED BALANCE
-    const { data: aaveData, refetch: refetchAave } = useReadContracts({
-        contracts: [
-            { address: vTokenAddress, abi: VTOKEN_ABI, functionName: 'balanceOf', args: address ? [address] : undefined },
-            { address: vTokenAddress, abi: VTOKEN_ABI, functionName: 'exchangeRateStored' },
-        ],
-        query: { enabled: !!address && isAave && !!vTokenAddress, refetchInterval: 10000 }
-    });
-
-    const KINZA_DATA_PROVIDER = '0x09ddc4ae826601b0f9671b9edffdf75e7e6f5d61' as `0x${string}`;
-    const { data: kinzaReserve, refetch: refetchKinza } = useReadContract({
-        address: KINZA_DATA_PROVIDER,
+    const { data: aaveUserReserve, refetch: refetchAave } = useReadContract({
+        address: AAVE_DATA_PROVIDER,
         abi: [{ name: 'getUserReserveData', type: 'function', stateMutability: 'view', inputs: [{ name: 'asset', type: 'address' }, { name: 'user', type: 'address' }], outputs: [{ name: 'currentATokenBalance', type: 'uint256' }, { name: 'currentStableDebtBalance', type: 'uint256' }, { name: 'currentVariableDebtBalance', type: 'uint256' }, { name: 'principalStableDebt', type: 'uint256' }, { name: 'scaledVariableDebt', type: 'uint256' }, { name: 'stableBorrowRate', type: 'uint256' }, { name: 'liquidityRate', type: 'uint256' }, { name: 'stableRateLastUpdated', type: 'uint40' }, { name: 'usedAsCollateralEnabled', type: 'bool' }] }] as const,
         functionName: 'getUserReserveData',
         args: (underlyingAddress || isNative) && address ? [
             isNative ? '0xCC650b486f723C924370656b509a82bD69526739' as `0x${string}` : underlyingAddress!,
             address
         ] : undefined,
-        query: { enabled: !!address && isKinza && (!!underlyingAddress || isNative), refetchInterval: 10000 }
+        query: { enabled: !!address && isAave && (!!underlyingAddress || isNative), refetchInterval: 10000 }
+    });
+
+    const { data: aaveReserveData } = useReadContract({
+        address: AAVE_POOL,
+        abi: [{ name: 'getReserveData', type: 'function', stateMutability: 'view', inputs: [{ name: 'asset', type: 'address' }], outputs: [{ name: 'configuration', type: 'uint256' }, { name: 'liquidityIndex', type: 'uint128' }, { name: 'currentLiquidityRate', type: 'uint128' }, { name: 'variableBorrowIndex', type: 'uint128' }, { name: 'currentVariableBorrowRate', type: 'uint128' }, { name: 'currentStableBorrowRate', type: 'uint128' }, { name: 'lastUpdateTimestamp', type: 'uint40' }, { name: 'aTokenAddress', type: 'address' }, { name: 'stableDebtTokenAddress', type: 'address' }, { name: 'variableDebtTokenAddress', type: 'address' }, { name: 'interestRateStrategyAddress', type: 'address' }, { name: 'id', type: 'uint8' }] }] as const,
+        functionName: 'getReserveData',
+        args: (underlyingAddress || isNative) ? [
+            isNative ? '0xCC650b486f723C924370656b509a82bD69526739' as `0x${string}` : underlyingAddress!
+        ] : undefined,
+        query: { enabled: !!address && isAave && (!!underlyingAddress || isNative), staleTime: 60 * 60 * 1000 }
     });
 
     const { data: radiantReserveData } = useReadContract({
@@ -126,6 +119,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
         query: { enabled: !!address && isRadiant && (!!underlyingAddress || isNative), staleTime: 60 * 60 * 1000 }
     });
 
+    const aaveATokenAddress = aaveReserveData ? (aaveReserveData as unknown as any[])[7] as `0x${string}` : undefined;
     const radiantATokenAddress = radiantReserveData ? (radiantReserveData as unknown as any[])[7] as `0x${string}` : undefined;
     const { data: radiantATokenBalance, refetch: refetchRadiant } = useReadContract({
         address: radiantATokenAddress,
@@ -138,15 +132,8 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
     let depositedAmount = 0;
     let depositedAmountUSD = 0;
 
-    if (isAave && aaveData) {
-        if (aaveData[0].status === 'success' && aaveData[1].status === 'success') {
-            const vBal = aaveData[0].result as bigint;
-            const exchangeRate = aaveData[1].result as bigint;
-            const rawUnderlying = (vBal * exchangeRate) / BigInt(1e18);
-            depositedAmount = parseFloat(formatUnits(rawUnderlying, decimals));
-        }
-    } else if (isKinza && kinzaReserve) {
-        const data = kinzaReserve as unknown as any[];
+    if (isAave && aaveUserReserve) {
+        const data = aaveUserReserve as unknown as any[];
         const aTokenBal = data[0] as bigint;
         depositedAmount = parseFloat(formatUnits(aTokenBal, decimals));
     } else if (isRadiant && radiantATokenBalance) {
@@ -159,8 +146,8 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
     depositedAmountUSD = depositedAmount * tokenPrice;
 
     // HEALTH & SAFETY
-    const { aave, kinza, radiant, isLoading: isHealthLoading, refetch: refetchHealth } = useAggregatedHealth();
-    const activeHealth = isAave ? aave : isKinza ? kinza : radiant;
+    const { aave, radiant, isLoading: isHealthLoading, refetch: refetchHealth } = useAggregatedHealth();
+    const activeHealth = isAave ? aave : radiant;
     const protocolDebt = activeHealth.debtUSD;
     const protocolPowerUSD = activeHealth.borrowPowerUSD;
     const assetLTV = pool.ltv || 0.7;
@@ -193,16 +180,13 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
 
     // ALLOWANCE LOGIC
     // For deposits: Check underlying -> approvalTarget
-    // For native withdrawals (Kinza/Radiant): Check aToken -> Gateway
-    const isNativeWithdraw = activeTab === 'withdraw' && isNative && (isKinza || isRadiant);
-    const kETH = '0xf5e0ADda6Fb191A332A787DEeDFD2cFFC72Dba0c' as `0x${string}`; // Kinza aToken for ETH
-    const rETH = '0x40351090037b9c4f6555071e9B24A82B068F2c05' as `0x${string}`; // Radiant aToken for ETH
-
+    // For native withdrawals: Check aToken -> Gateway
+    const isNativeWithdraw = activeTab === 'withdraw' && isNative && (isAave || isRadiant);
     const allowanceAddress = isNativeWithdraw
-        ? (isKinza ? kETH : rETH)
+        ? (isAave ? aaveATokenAddress : radiantATokenAddress)
         : underlyingAddress;
     const allowanceSpender = isNativeWithdraw
-        ? (isKinza ? KINZA_GATEWAY : RADIANT_GATEWAY)
+        ? (isAave ? AAVE_GATEWAY : RADIANT_GATEWAY)
         : approvalTarget;
 
     const { data: currentAllowance, refetch: refetchAllowance } = useReadContract({
@@ -224,13 +208,13 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                 });
             } else {
                 setStep("success");
-                refetchAave?.(); refetchKinza?.(); refetchRadiant?.();
+                refetchAave?.(); refetchRadiant?.();
                 refetchBalance?.(); refetchToken?.(); refetchHealth?.();
             }
         } else if (isConfirming || isPending) {
             if (step !== 'approving' && step !== 'success') setStep("mining");
         }
-    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchKinza, refetchRadiant, refetchBalance, refetchToken, refetchHealth, activeTab, toast]);
+    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchRadiant, refetchBalance, refetchToken, refetchHealth, activeTab, toast]);
 
     const handleAction = useCallback(() => {
         if (!isConnected) { openConnectModal?.(); return; }
@@ -241,21 +225,10 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
         try {
             if (activeTab === 'deposit') {
                 const needsApproval = !isNative && underlyingAddress && approvalTarget && (currentAllowance || BigInt(0)) < amountBig;
-                if (isAave) {
-                    if (isNative && vTokenAddress) {
-                        writeContract({ address: vTokenAddress, abi: VETH_ABI, functionName: 'mint', value: amountBig });
-                    } else if (!isNative && vTokenAddress) {
-                        if (needsApproval) {
-                            setStep('approving');
-                            writeContract({ address: underlyingAddress, abi: ERC20_ABI, functionName: 'approve', args: [approvalTarget!, maxUint256] });
-                        } else {
-                            writeContract({ address: vTokenAddress, abi: VTOKEN_ABI, functionName: 'mint', args: [amountBig] });
-                        }
-                    }
-                } else if (isKinza || isRadiant) {
-                    const poolAddress = isKinza ? KINZA_POOL : RADIANT_LENDING_POOL;
+                if (isAave || isRadiant) {
+                    const poolAddress = isAave ? AAVE_POOL : RADIANT_LENDING_POOL;
                     if (isNative) {
-                        const gatewayAddress = isKinza ? KINZA_GATEWAY : RADIANT_GATEWAY;
+                        const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
                         if (gatewayAddress) {
                             writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'depositETH', args: [poolAddress, address!, 0], value: amountBig });
                         }
@@ -264,24 +237,15 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                             setStep('approving');
                             writeContract({ address: underlyingAddress, abi: ERC20_ABI, functionName: 'approve', args: [approvalTarget!, amountBig] });
                         } else {
-                            if (isKinza) writeContract({ address: KINZA_POOL, abi: KINZA_POOL_ABI, functionName: 'supply', args: [underlyingAddress!, amountBig, address!, 0] });
+                            if (isAave) writeContract({ address: AAVE_POOL, abi: AAVE_POOL_ABI, functionName: 'supply', args: [underlyingAddress!, amountBig, address!, 0] });
                             else writeContract({ address: RADIANT_LENDING_POOL, abi: RADIANT_POOL_ABI, functionName: 'deposit', args: [underlyingAddress!, amountBig, address!, 0] });
                         }
                     }
                 }
             } else {
-                if (isAave) {
-                    if (vTokenAddress) {
-                        if (collateral?.isCollateral && parseFloat(amount) > (collateral.maxWithdrawable || 0)) {
-                            toast({ title: "Cannot Withdraw", description: "This withdrawal would put your account underwater. Repay some debt first.", variant: "destructive" });
-                            setStep('idle'); return;
-                        }
-                        if (isNative) writeContract({ address: vTokenAddress, abi: VETH_ABI, functionName: 'redeemUnderlying', args: [amountBig] });
-                        else writeContract({ address: vTokenAddress, abi: VTOKEN_ABI, functionName: 'redeemUnderlying', args: [amountBig] });
-                    }
-                } else if (isKinza || isRadiant) {
-                    const poolAddress = isKinza ? KINZA_POOL : RADIANT_LENDING_POOL;
-                    const gatewayAddress = isKinza ? KINZA_GATEWAY : RADIANT_GATEWAY;
+                if (isAave || isRadiant) {
+                    const poolAddress = isAave ? AAVE_POOL : RADIANT_LENDING_POOL;
+                    const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
                     if (isNative) {
                         const needsWithdrawApproval = (currentAllowance || BigInt(0)) < amountBig;
                         if (needsWithdrawApproval) {
@@ -291,16 +255,16 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                             if (gatewayAddress) writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'withdrawETH', args: [poolAddress, amountBig, address!] });
                         }
                     } else {
-                        if (isKinza) writeContract({ address: KINZA_POOL, abi: KINZA_POOL_ABI, functionName: 'withdraw', args: [underlyingAddress!, amountBig, address!] });
+                        if (isAave) writeContract({ address: AAVE_POOL, abi: AAVE_POOL_ABI, functionName: 'withdraw', args: [underlyingAddress!, amountBig, address!] });
                         else writeContract({ address: RADIANT_LENDING_POOL, abi: RADIANT_POOL_ABI, functionName: 'withdraw', args: [underlyingAddress!, amountBig, address!] });
                     }
                 }
             }
         } catch (e) { console.error(e); }
-    }, [amount, activeTab, isConnected, isNative, isAave, isKinza, isRadiant, address, vTokenAddress, underlyingAddress, approvalTarget, currentAllowance, decimals, step, refetchAllowance, refetchAave, refetchKinza, refetchRadiant, toast, collateral]);
+    }, [amount, activeTab, isConnected, isNative, isAave, isRadiant, address, underlyingAddress, approvalTarget, currentAllowance, decimals, step, refetchAllowance, refetchAave, refetchRadiant, toast, allowanceAddress, allowanceSpender]);
 
-    const isWithdrawBlocked = activeTab === 'withdraw' && isAave && collateral.isCollateral && collateral.borrowBalance > 0 && collateral.maxWithdrawable === 0;
-    const maxWithdrawableAvailable = isAave && collateral.isCollateral ? collateral.maxWithdrawable : depositedAmount;
+    const isWithdrawBlocked = activeTab === 'withdraw' && maxSafe <= 0 && depositedAmount > 0;
+    const maxWithdrawableAvailable = depositedAmount;
 
     const setHalf = () => {
         const base = activeTab === 'deposit' ? walletBalance : maxWithdrawableAvailable;
@@ -317,7 +281,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
 
     const amountNum = parseFloat(amount || '0');
     const isButtonDisabled = !amount || amountNum <= 0 || step === 'mining' || step === 'approving' || step === 'success' || isWithdrawBlocked;
-    const protocolDisplay = isAave ? 'Aave' : isKinza ? 'Kinza' : isRadiant ? 'Radiant' : pool.project;
+    const protocolDisplay = isAave ? 'Aave V3' : isRadiant ? 'Radiant' : pool.project;
 
     return (
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -393,21 +357,16 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                                                 </div>
                                             </div>
                                             <div className="text-right flex flex-col items-end justify-center">
-                                                {isAave && (
-                                                    <>
-                                                        <div className="text-[9px] md:text-[10px] uppercase text-muted-foreground/30 font-black tracking-tighter mb-1.5">Collateral</div>
-                                                        {collateral.isLoading ? (
-                                                            <Loader2 className="w-3 h-3 animate-spin text-muted-foreground/20" />
-                                                        ) : collateral.isCollateral ? (
-                                                            <div className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1">
-                                                                <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                                                                <span className="text-[10px] md:text-xs font-black text-emerald-500 uppercase italic">ACTIVE</span>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] md:text-xs font-black text-muted-foreground/40 uppercase italic">DISABLED</div>
-                                                        )}
-                                                    </>
-                                                )}
+                                                <div className="text-[9px] md:text-[10px] uppercase text-muted-foreground/30 font-black tracking-tighter mb-1.5">Health</div>
+                                                <div className={cn("px-2 py-0.5 rounded-full border text-[10px] md:text-xs font-black uppercase italic",
+                                                    activeHealth.healthFactor > 1.5
+                                                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
+                                                        : activeHealth.healthFactor > 1.1
+                                                            ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
+                                                            : "bg-red-500/10 border-red-500/20 text-red-400"
+                                                )}>
+                                                    {activeHealth.healthFactor > 1.5 ? "SAFE" : activeHealth.healthFactor > 1.1 ? "WATCH" : "RISK"}
+                                                </div>
                                             </div>
                                         </div>
 
@@ -470,11 +429,11 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                         </div>
                     </div>
 
-                    {activeTab === 'withdraw' && isAave && collateral.isCollateral && (
+                    {activeTab === 'withdraw' && isWithdrawBlocked && (
                         <div className="flex items-start gap-2 p-2 md:p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 shadow-lg">
                             <AlertTriangle className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-500 shrink-0 mt-0.5" />
                             <div className="text-[10px] md:text-[11px] text-amber-100 font-medium leading-relaxed">
-                                This asset is currently enabled as <span className="font-bold text-amber-400">Collateral</span>. You must turn off its collateral status in the <span className="font-bold text-amber-400">Portfolio</span> before it can be fully withdrawn.
+                                Safe withdrawal limit reached. Repay debt first or use a smaller withdrawal amount.
                             </div>
                         </div>
                     )}
