@@ -1,6 +1,44 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextResponse } from "next/server";
 
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+
+function isRetryableError(error: unknown): boolean {
+    if (!error || typeof error !== "object") return false;
+    const maybe = error as { status?: number; message?: string };
+    if (typeof maybe.status === "number" && RETRYABLE_STATUS.has(maybe.status)) return true;
+    const message = String(maybe.message || "").toLowerCase();
+    return message.includes("unavailable") || message.includes("high demand") || message.includes("timeout");
+}
+
+function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function generateWithFallback(ai: GoogleGenAI, prompt: string): Promise<string> {
+    const preferred = process.env.GEMINI_MODEL || "gemini-3-flash-preview";
+    const models = Array.from(new Set([preferred, "gemini-2.5-flash", "gemini-1.5-flash"]));
+    let lastError: unknown;
+
+    for (const model of models) {
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+                const result = await ai.models.generateContent({
+                    model,
+                    contents: prompt,
+                });
+                return result.text || "[]";
+            } catch (error) {
+                lastError = error;
+                if (!isRetryableError(error) || attempt === 3) break;
+                await sleep(500 * attempt);
+            }
+        }
+    }
+
+    throw lastError;
+}
+
 export async function POST(req: Request) {
     try {
         const { portfolio } = await req.json();
@@ -50,12 +88,7 @@ export async function POST(req: Request) {
       Just the raw JSON array.
     `;
 
-        const result = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
-            contents: prompt,
-        });
-
-        const text = result.text || "[]";
+        const text = await generateWithFallback(ai, prompt);
 
         // Clean up potential markdown formatting if the model disregards instructions
         const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
