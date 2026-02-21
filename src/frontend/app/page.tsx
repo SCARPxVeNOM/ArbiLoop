@@ -95,7 +95,7 @@ export default function LandingPage() {
                     'Real-time Health Factor monitoring across chains',
 
                     'Telegram Liquidation Alerts',
-                    'Simulation mode to stress-test your strategy'
+                    'Strategy planner to evaluate loop risk before execution'
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 font-bold text-white/80">
                       <div className="h-6 w-6 rounded-full bg-[#CEFF00]/20 flex items-center justify-center text-[#CEFF00]">
