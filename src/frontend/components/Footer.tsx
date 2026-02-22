@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Send } from 'lucide-react';
 
 const TELEGRAM_BOT_URL = process.env.NEXT_PUBLIC_TELEGRAM_BOT_URL || 'https://t.me/ArbiLoopBot';
+const BRAND_LOGO_SRC = '/ArbiLoopBrand.png?v=20260222';
 
 const Footer = () => {
     // Current year for copyright
@@ -23,10 +24,11 @@ const Footer = () => {
                         <Link href="/" className="flex items-center gap-3 w-fit">
                             <div className="relative h-8 w-8">
                                 <Image
-                                    src="/ArbiLoop.png"
+                                    src={BRAND_LOGO_SRC}
                                     alt="ArbiLoop Logo"
                                     fill
                                     className="object-contain"
+                                    unoptimized
                                 />
                             </div>
                             <span className="font-outfit font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">

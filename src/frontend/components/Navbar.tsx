@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const BRAND_LOGO_SRC = '/ArbiLoopBrand.png?v=20260222';
 
 export function Navbar() {
     const pathname = usePathname();
@@ -25,10 +26,11 @@ export function Navbar() {
                 <Link href="/" className="flex items-center gap-2 md:gap-3 cursor-pointer hover:opacity-80 transition-opacity">
                     <div className="relative h-6 w-6 md:h-8 md:w-8">
                         <Image
-                            src="/ArbiLoop.png"
+                            src={BRAND_LOGO_SRC}
                             alt="ArbiLoop Logo"
                             fill
                             className="object-contain"
+                            unoptimized
                         />
                     </div>
                     <span className="font-outfit font-bold text-lg md:text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 drop-shadow-sm">ArbiLoop</span>

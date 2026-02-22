@@ -9,6 +9,8 @@ import Image from 'next/image';
 import { targetChainName } from '@/lib/network';
 import { getProtocolLabel } from '@/lib/protocols';
 
+const BRAND_LOGO_SRC = '/ArbiLoopBrand.png?v=20260222';
+
 function Counter({ value, prefix = '', suffix = '' }: { value: number, prefix?: string, suffix?: string }) {
     const ref = useRef<HTMLSpanElement>(null);
     const motionValue = useMotionValue(0);
@@ -82,7 +84,7 @@ export function LendHeader() {
                     {/* Logo/Icon + Title Row */}
                     <div className="flex items-center gap-3 mb-2">
                         <div className="relative w-8 h-8 md:w-12 md:h-12">
-                            <Image src="/ArbiLoop.png" alt="ArbiLoop" fill className="object-contain" />
+                            <Image src={BRAND_LOGO_SRC} alt="ArbiLoop" fill className="object-contain" unoptimized />
                         </div>
 
                         <h1 className="text-xl md:text-3xl font-bold text-white tracking-tight">

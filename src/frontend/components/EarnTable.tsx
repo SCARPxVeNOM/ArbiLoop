@@ -12,12 +12,14 @@ import { Card } from "@/components/ui/card";
 import { MarketModal } from "./MarketModal";
 import { formatMoney, formatTokenAmount } from "@/lib/utils";
 import { ACTIVE_PROTOCOLS, getProtocolIcon, getProtocolLabel } from '@/lib/protocols';
+import { useActivityTimeline } from '@/hooks/useActivityTimeline';
 
 export function EarnTable() {
     const { address } = useAccount();
     const { data: yields, isLoading: isYieldsLoading } = useYields();
     const { positions: aavePositions, isLoading: isAaveLoading } = useAavePortfolio();
     const { positions: radiantPositions, isLoading: isRadiantLoading } = useRadiantPortfolio();
+    const { records: activityRecords } = useActivityTimeline();
 
     const [selectedPool, setSelectedPool] = useState<any>(null);
     const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
@@ -58,6 +60,73 @@ export function EarnTable() {
     };
 
     const isLoading = isYieldsLoading || (!!address && (isAaveLoading || isRadiantLoading));
+
+    const calculateEstimatedEarnings = (depositedUsd: number, apy: number) => {
+        const yearly = depositedUsd > 0 ? depositedUsd * (apy / 100) : 0;
+        const monthly = yearly / 12;
+        return { yearly, monthly };
+    };
+
+    const trackedEarningsByPool = useMemo(() => {
+        const ledger = new Map<string, { principalUSD: number; realizedUSD: number; hasTrackedActivity: boolean }>();
+        const confirmedEarnActions = activityRecords
+            .filter((record) =>
+                record.status === 'confirmed' &&
+                (record.action === 'deposit' || record.action === 'withdraw') &&
+                typeof record.amountUsd === 'number' &&
+                Number.isFinite(record.amountUsd)
+            )
+            .sort((a, b) => a.createdAt - b.createdAt);
+
+        confirmedEarnActions.forEach((record) => {
+            const key = `${record.protocol}-${String(record.asset).toUpperCase()}`;
+            const entry = ledger.get(key) || { principalUSD: 0, realizedUSD: 0, hasTrackedActivity: false };
+            const amountUsd = Math.max(0, Number(record.amountUsd || 0));
+            entry.hasTrackedActivity = true;
+
+            if (record.action === 'deposit') {
+                entry.principalUSD += amountUsd;
+            } else {
+                const principalPart = Math.min(entry.principalUSD, amountUsd);
+                const realizedPart = Math.max(0, amountUsd - entry.principalUSD);
+                entry.principalUSD = Math.max(0, entry.principalUSD - principalPart);
+                entry.realizedUSD += realizedPart;
+            }
+
+            ledger.set(key, entry);
+        });
+
+        return ledger;
+    }, [activityRecords]);
+
+    const getEarningsForPool = (pool: any, depositedUSD: number) => {
+        const estimated = calculateEstimatedEarnings(depositedUSD, pool.apy);
+        const key = `${pool.project}-${pool.symbol}`.toUpperCase();
+        const tracked = trackedEarningsByPool.get(key);
+
+        if (!tracked?.hasTrackedActivity) {
+            return {
+                mode: 'estimated' as const,
+                realizedUSD: 0,
+                unrealizedUSD: 0,
+                totalUSD: estimated.yearly,
+                estimatedYearlyUSD: estimated.yearly,
+                estimatedMonthlyUSD: estimated.monthly,
+            };
+        }
+
+        const unrealizedUSD = Math.max(0, depositedUSD - tracked.principalUSD);
+        const totalUSD = tracked.realizedUSD + unrealizedUSD;
+
+        return {
+            mode: 'tracked' as const,
+            realizedUSD: tracked.realizedUSD,
+            unrealizedUSD,
+            totalUSD,
+            estimatedYearlyUSD: estimated.yearly,
+            estimatedMonthlyUSD: estimated.monthly,
+        };
+    };
 
     // Map positions for O(1) lookup: key = `${protocol}-${symbol}`
     const positionMap = useMemo(() => {
@@ -215,6 +284,7 @@ export function EarnTable() {
                             const userPosition = positionMap.get(`${pool.project}-${pool.symbol}`.toUpperCase());
                             const depositedAmount = userPosition ? userPosition.supply : 0;
                             const depositedUSD = userPosition ? userPosition.supplyUSD : 0;
+                            const earnings = getEarningsForPool(pool, depositedUSD);
 
                             return (
                                 <div
@@ -260,7 +330,23 @@ export function EarnTable() {
 
                                         {/* Earnings */}
                                         <div className="hidden md:block col-span-2 text-right font-mono text-muted-foreground text-sm">
-                                            -
+                                            {depositedUSD > 0 ? (
+                                                <div className="flex flex-col items-end">
+                                                    {earnings.mode === 'tracked' ? (
+                                                        <>
+                                                            <span className="text-blue-400 font-semibold">Real: {formatMoney(earnings.realizedUSD)}</span>
+                                                            <span className="text-xs text-muted-foreground">Live: {formatMoney(earnings.unrealizedUSD)}</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span className="text-blue-400 font-semibold">{formatMoney(earnings.estimatedYearlyUSD)}/yr</span>
+                                                            <span className="text-xs text-muted-foreground">Est: {formatMoney(earnings.estimatedMonthlyUSD)}/mo</span>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span className="text-muted-foreground">-</span>
+                                            )}
                                         </div>
 
                                         {/* TVL */}
@@ -296,6 +382,7 @@ export function EarnTable() {
                         // Lookup position (Case-insensitive matching)
                         const userPosition = positionMap.get(`${pool.project}-${pool.symbol}`.toUpperCase());
                         const depositedUSD = userPosition ? userPosition.supplyUSD : 0;
+                        const earnings = getEarningsForPool(pool, depositedUSD);
 
                         return (
                             <Card
@@ -327,10 +414,20 @@ export function EarnTable() {
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4 py-4 border-t border-white/5">
+                                    <div className="grid grid-cols-3 gap-4 py-4 border-t border-white/5">
                                         <div>
                                             <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">My Deposit</div>
                                             <div className="font-mono font-medium">{formatMoney(depositedUSD)}</div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
+                                                {earnings.mode === 'tracked' ? 'Realized' : 'Est. Yearly'}
+                                            </div>
+                                            <div className="font-mono font-medium text-blue-400">
+                                                {depositedUSD > 0
+                                                    ? (earnings.mode === 'tracked' ? formatMoney(earnings.realizedUSD) : formatMoney(earnings.estimatedYearlyUSD))
+                                                    : '-'}
+                                            </div>
                                         </div>
                                         <div className="text-right">
                                             <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">TVL (USD)</div>

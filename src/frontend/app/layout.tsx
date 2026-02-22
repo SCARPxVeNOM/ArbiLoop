@@ -13,15 +13,15 @@ export const metadata: Metadata = {
   description: 'Automated DeFi strategies on Arbitrum.',
   icons: {
     icon: [
-      { url: '/ArbiLoop.png', type: 'image/png' },
+      { url: '/ArbiLoopBrand.png?v=20260222', type: 'image/png' },
     ],
     apple: [
-      { url: '/ArbiLoop.png', sizes: '180x180', type: 'image/png' },
+      { url: '/ArbiLoopBrand.png?v=20260222', sizes: '180x180', type: 'image/png' },
     ],
     other: [
       {
         rel: 'apple-touch-icon-precomposed',
-        url: '/ArbiLoop.png',
+        url: '/ArbiLoopBrand.png?v=20260222',
       },
     ],
   },
