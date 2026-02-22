@@ -7,7 +7,7 @@ import { AssetIcon } from "@/components/ui/asset-icon";
 import { Loader2, Check, ArrowUpDown, AlertTriangle, Shield, ExternalLink, ArrowRight, ShieldAlert, X } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useReadContracts, useBalance } from "wagmi";
+import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt, useReadContract, useReadContracts, useBalance } from "wagmi";
 import { parseUnits, formatUnits, maxUint256 } from "viem";
 import {
     ERC20_ABI,
@@ -20,6 +20,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { formatMoney, formatSmallNumber, getTokenDecimals, toPlainString, cn } from "@/lib/utils";
 import { useTokenPrices } from "@/hooks/useTokenPrices";
 import { useAggregatedHealth } from "@/hooks/useAggregatedHealth";
+import { getExplorerTxUrl, upsertActivityRecord, updateActivityStatus } from "@/lib/activity";
 
 interface EarnModalProps {
     isOpen: boolean;
@@ -39,17 +40,28 @@ interface EarnModalContentProps {
     onClose: () => void;
     pool: any;
     isEmbedded?: boolean;
+    initialTab?: "deposit" | "withdraw";
 }
 
-export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModalContentProps) {
+export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab = "deposit" }: EarnModalContentProps) {
     const { toast } = useToast();
     const { address, isConnected } = useAccount();
+    const chainId = useChainId();
     const { openConnectModal } = useConnectModal();
     const [amount, setAmount] = useState("");
-    const [activeTab, setActiveTab] = useState<"deposit" | "withdraw">("deposit");
+    const [activeTab, setActiveTab] = useState<"deposit" | "withdraw">(initialTab);
     const [step, setStep] = useState<"idle" | "approving" | "mining" | "success">("idle");
     const [isStatsExpanded, setIsStatsExpanded] = useState(false);
+    const [submittedTxMeta, setSubmittedTxMeta] = useState<{
+        action: "deposit" | "withdraw";
+        amount: number;
+        amountUsd: number;
+    } | null>(null);
     const { data: prices } = useTokenPrices();
+
+    useEffect(() => {
+        setActiveTab(initialTab);
+    }, [initialTab]);
 
     // Protocol detection
     const isAave = pool.project === 'aave-v3';
@@ -65,6 +77,21 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
     // Transaction hooks
     const { writeContract, data: hash, isPending, error: writeError, reset: resetWrite } = useWriteContract();
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
+
+    useEffect(() => {
+        if (!hash || !address || !submittedTxMeta) return;
+        upsertActivityRecord(address, chainId, {
+            hash,
+            protocol: pool.project,
+            action: submittedTxMeta.action,
+            asset: pool.symbol,
+            amount: submittedTxMeta.amount,
+            amountUsd: submittedTxMeta.amountUsd,
+            status: 'pending',
+            explorerUrl: getExplorerTxUrl(chainId, hash),
+            summary: `${submittedTxMeta.action} ${submittedTxMeta.amount.toFixed(4)} ${pool.symbol}`,
+        });
+    }, [address, chainId, hash, pool.project, pool.symbol, submittedTxMeta]);
 
     // WALLET BALANCE
     const { data: balanceData, refetch: refetchBalance } = useBalance({
@@ -199,6 +226,10 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
 
     useEffect(() => {
         if (isConfirmed) {
+            if (hash && address && submittedTxMeta) {
+                updateActivityStatus(address, chainId, hash, 'confirmed');
+                setSubmittedTxMeta(null);
+            }
             if (step === 'approving') {
                 setStep('idle');
                 refetchAllowance();
@@ -214,13 +245,19 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
         } else if (isConfirming || isPending) {
             if (step !== 'approving' && step !== 'success') setStep("mining");
         }
-    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchRadiant, refetchBalance, refetchToken, refetchHealth, activeTab, toast]);
+    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchRadiant, refetchBalance, refetchToken, refetchHealth, activeTab, toast, hash, address, chainId, submittedTxMeta]);
 
     const handleAction = useCallback(() => {
         if (!isConnected) { openConnectModal?.(); return; }
         const amountNum = parseFloat(amount || '0');
         if (amountNum <= 0) return;
         const amountBig = parseUnits(amount, decimals);
+        const nextMeta = {
+            action: activeTab as "deposit" | "withdraw",
+            amount: amountNum,
+            amountUsd: amountNum * tokenPrice,
+        };
+        setSubmittedTxMeta(null);
 
         try {
             if (activeTab === 'deposit') {
@@ -230,6 +267,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                     if (isNative) {
                         const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
                         if (gatewayAddress) {
+                            setSubmittedTxMeta(nextMeta);
                             writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'depositETH', args: [poolAddress, address!, 0], value: amountBig });
                         }
                     } else {
@@ -237,6 +275,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                             setStep('approving');
                             writeContract({ address: underlyingAddress, abi: ERC20_ABI, functionName: 'approve', args: [approvalTarget!, amountBig] });
                         } else {
+                            setSubmittedTxMeta(nextMeta);
                             if (isAave) writeContract({ address: AAVE_POOL, abi: AAVE_POOL_ABI, functionName: 'supply', args: [underlyingAddress!, amountBig, address!, 0] });
                             else writeContract({ address: RADIANT_LENDING_POOL, abi: RADIANT_POOL_ABI, functionName: 'deposit', args: [underlyingAddress!, amountBig, address!, 0] });
                         }
@@ -252,16 +291,20 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false }: EarnModa
                             setStep('approving');
                             writeContract({ address: allowanceAddress!, abi: ERC20_ABI, functionName: 'approve', args: [allowanceSpender!, maxUint256] });
                         } else {
-                            if (gatewayAddress) writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'withdrawETH', args: [poolAddress, amountBig, address!] });
+                            if (gatewayAddress) {
+                                setSubmittedTxMeta(nextMeta);
+                                writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'withdrawETH', args: [poolAddress, amountBig, address!] });
+                            }
                         }
                     } else {
+                        setSubmittedTxMeta(nextMeta);
                         if (isAave) writeContract({ address: AAVE_POOL, abi: AAVE_POOL_ABI, functionName: 'withdraw', args: [underlyingAddress!, amountBig, address!] });
                         else writeContract({ address: RADIANT_LENDING_POOL, abi: RADIANT_POOL_ABI, functionName: 'withdraw', args: [underlyingAddress!, amountBig, address!] });
                     }
                 }
             }
         } catch (e) { console.error(e); }
-    }, [amount, activeTab, isConnected, isNative, isAave, isRadiant, address, underlyingAddress, approvalTarget, currentAllowance, decimals, step, refetchAllowance, refetchAave, refetchRadiant, toast, allowanceAddress, allowanceSpender]);
+    }, [amount, activeTab, isConnected, isNative, isAave, isRadiant, address, underlyingAddress, approvalTarget, currentAllowance, decimals, allowanceAddress, allowanceSpender, tokenPrice, writeContract]);
 
     const isWithdrawBlocked = activeTab === 'withdraw' && maxSafe <= 0 && depositedAmount > 0;
     const maxWithdrawableAvailable = depositedAmount;

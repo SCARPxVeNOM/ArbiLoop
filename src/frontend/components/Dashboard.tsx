@@ -1,5 +1,5 @@
 'use client';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,21 +8,30 @@ import { useAccount } from 'wagmi';
 import { useAggregatedHealth } from "@/hooks/useAggregatedHealth";
 import { useAavePortfolio } from "@/hooks/useAavePortfolio";
 import { useRadiantPortfolio } from "@/hooks/useRadiantPortfolio";
+import { useYields } from "@/hooks/useYields";
 import { TrendingUp, AlertTriangle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getProtocolIcon, getProtocolLabel } from '@/lib/protocols';
+import { MarketModal } from "@/components/MarketModal";
 
 import { AIInsights } from "@/components/AIInsights";
+import { PortfolioAnalytics, DashboardPosition } from "@/components/PortfolioAnalytics";
 
 type PortfolioPosition = {
     supplyUSD: number;
     borrowUSD: number;
-    apy: number;
-    borrowApy: number;
+    apy?: number;
+    borrowApy?: number;
 };
 
 export function Dashboard() {
     const { address } = useAccount();
+    const { data: yields = [] } = useYields();
+    const [quickActionModal, setQuickActionModal] = useState<{
+        mode: "earn" | "borrow";
+        tab: "deposit" | "repay";
+        pool: Record<string, unknown>;
+    } | null>(null);
 
     // 2. Fetch Aggregated Health Data
     // We use the connected address directly as the "wallet" for now, or adapt as needed.
@@ -48,10 +57,10 @@ export function Dashboard() {
 
             positions.forEach(pos => {
                 if (pos.supplyUSD > 0) {
-                    totalAnnualIncome += pos.supplyUSD * (pos.apy / 100);
+                    totalAnnualIncome += pos.supplyUSD * ((pos.apy || 0) / 100);
                 }
                 if (pos.borrowUSD > 0) {
-                    totalAnnualCost += pos.borrowUSD * (pos.borrowApy / 100);
+                    totalAnnualCost += pos.borrowUSD * ((pos.borrowApy || 0) / 100);
                 }
             });
 
@@ -63,7 +72,11 @@ export function Dashboard() {
         const totalBorrowed = aave.totalBorrowUSD + radiant.totalBorrowUSD;
         const totalNetWorth = totalSupplied - totalBorrowed;
 
-        const allPositions = [...(aave.positions || []), ...(radiant.positions || [])];
+        const allPositions: DashboardPosition[] = [
+            ...(aave.positions || []).map((position: any) => ({ ...position, protocol: 'aave-v3' })),
+            ...(radiant.positions || []).map((position: any) => ({ ...position, protocol: 'radiant-v2' })),
+        ];
+
         const globalNetAPY = calculateNetAPY(allPositions, totalNetWorth);
         const aaveNetAPY = calculateNetAPY(aave.positions || [], aave.totalSupplyUSD - aave.totalBorrowUSD);
         const radiantNetAPY = calculateNetAPY(radiant.positions || [], radiant.totalSupplyUSD - radiant.totalBorrowUSD);
@@ -80,6 +93,15 @@ export function Dashboard() {
     }, [aave, radiant]);
 
     const { totalSupplied, totalBorrowed, totalNetWorth, globalNetAPY, aaveNetAPY, radiantNetAPY, allPositions } = stats;
+    const overallHealthFactor = useMemo(() => {
+        const activeHealth = [healthData.aave, healthData.radiant]
+            .filter((protocol) => protocol.hasPositions)
+            .map((protocol) => protocol.healthFactor)
+            .filter((value) => Number.isFinite(value) && value > 0);
+
+        if (activeHealth.length === 0) return 10;
+        return Math.min(...activeHealth);
+    }, [healthData.aave, healthData.radiant]);
 
     // Prepare data for AI Agent - Memoized to prevent frequent re-renders of AIInsights
     const portfolioForAI = {
@@ -237,6 +259,18 @@ export function Dashboard() {
                 </div>
             </div>
 
+            <PortfolioAnalytics
+                address={address}
+                isLoading={isDashboardLoading}
+                totalNetWorthUsd={totalNetWorth}
+                totalSupplyUsd={totalSupplied}
+                totalBorrowUsd={totalBorrowed}
+                overallHealthFactor={overallHealthFactor}
+                positions={allPositions}
+                yields={yields}
+                onTriggerQuickAction={(payload) => setQuickActionModal(payload)}
+            />
+
             <div className="grid gap-4 md:grid-cols-3">
                 {[
                     {
@@ -317,6 +351,16 @@ export function Dashboard() {
             <Card className="col-span-full border-none shadow-none bg-transparent">
                 <Markets />
             </Card>
+
+            {quickActionModal && (
+                <MarketModal
+                    isOpen={!!quickActionModal}
+                    onClose={() => setQuickActionModal(null)}
+                    initialMode={quickActionModal.mode}
+                    initialTab={quickActionModal.tab}
+                    pool={quickActionModal.pool}
+                />
+            )}
         </div>
     )
 }

@@ -14,9 +14,10 @@ interface MarketModalProps {
     onClose: () => void;
     initialMode: "earn" | "borrow";
     pool: any;
+    initialTab?: "deposit" | "withdraw" | "borrow" | "repay";
 }
 
-export function MarketModal({ isOpen, onClose, initialMode, pool }: MarketModalProps) {
+export function MarketModal({ isOpen, onClose, initialMode, pool, initialTab }: MarketModalProps) {
     const [mode, setMode] = useState<"earn" | "borrow">(initialMode);
     const [isSwitching, setIsSwitching] = useState(false);
 
@@ -124,9 +125,19 @@ export function MarketModal({ isOpen, onClose, initialMode, pool }: MarketModalP
                                 className="flex-1 flex flex-col min-h-0"
                             >
                                 {mode === "earn" ? (
-                                    <EarnModalContent pool={pool} onClose={onClose} isEmbedded={true} />
+                                    <EarnModalContent
+                                        pool={pool}
+                                        onClose={onClose}
+                                        isEmbedded={true}
+                                        initialTab={initialTab === 'withdraw' ? 'withdraw' : 'deposit'}
+                                    />
                                 ) : (
-                                    <BorrowModalContent pool={pool} onClose={onClose} isEmbedded={true} />
+                                    <BorrowModalContent
+                                        pool={pool}
+                                        onClose={onClose}
+                                        isEmbedded={true}
+                                        initialTab={initialTab === 'repay' ? 'repay' : 'borrow'}
+                                    />
                                 )}
                             </motion.div>
                         )}

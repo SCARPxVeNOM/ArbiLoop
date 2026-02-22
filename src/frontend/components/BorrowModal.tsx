@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AssetIcon } from "@/components/ui/asset-icon";
 import { Loader2, Check, ArrowUpDown, ShieldAlert, ArrowRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract, useBalance } from "wagmi";
+import { useAccount, useChainId, useWriteContract, useWaitForTransactionReceipt, useReadContract, useBalance } from "wagmi";
 import { parseUnits, formatUnits, maxUint256 } from "viem";
 import {
     ERC20_ABI,
@@ -22,6 +22,7 @@ import { useAavePortfolio } from "@/hooks/useAavePortfolio";
 import { useRadiantPortfolio } from "@/hooks/useRadiantPortfolio";
 import { useToast } from "@/components/ui/use-toast";
 import { useAggregatedHealth } from "@/hooks/useAggregatedHealth";
+import { getExplorerTxUrl, upsertActivityRecord, updateActivityStatus } from "@/lib/activity";
 
 interface BorrowModalProps {
     isOpen: boolean;
@@ -42,6 +43,7 @@ interface BorrowModalContentProps {
     onClose: () => void;
     pool: BorrowModalProps["pool"];
     isEmbedded?: boolean;
+    initialTab?: "borrow" | "repay";
 }
 
 type PositionLike = {
@@ -50,14 +52,24 @@ type PositionLike = {
     borrowUSD?: number;
 };
 
-export function BorrowModalContent({ onClose, pool, isEmbedded = false }: BorrowModalContentProps) {
+export function BorrowModalContent({ onClose, pool, isEmbedded = false, initialTab = "borrow" }: BorrowModalContentProps) {
     const { toast } = useToast();
     const { isConnected, address } = useAccount();
+    const chainId = useChainId();
     const { openConnectModal } = useConnectModal();
     const [amount, setAmount] = useState("");
-    const [activeTab, setActiveTab] = useState<"borrow" | "repay">("borrow");
+    const [activeTab, setActiveTab] = useState<"borrow" | "repay">(initialTab);
     const [step, setStep] = useState<"idle" | "approving" | "mining" | "success">("idle");
     const [isStatsExpanded, setIsStatsExpanded] = useState(false);
+    const [submittedTxMeta, setSubmittedTxMeta] = useState<{
+        action: "borrow" | "repay";
+        amount: number;
+        amountUsd: number;
+    } | null>(null);
+
+    useEffect(() => {
+        setActiveTab(initialTab);
+    }, [initialTab]);
 
     // Protocol detection
     const isAave = pool.project === 'aave-v3';
@@ -130,7 +142,26 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
     const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash });
 
     useEffect(() => {
+        if (!hash || !address || !submittedTxMeta) return;
+        upsertActivityRecord(address, chainId, {
+            hash,
+            protocol: pool.project,
+            action: submittedTxMeta.action,
+            asset: pool.symbol,
+            amount: submittedTxMeta.amount,
+            amountUsd: submittedTxMeta.amountUsd,
+            status: 'pending',
+            explorerUrl: getExplorerTxUrl(chainId, hash),
+            summary: `${submittedTxMeta.action} ${submittedTxMeta.amount.toFixed(4)} ${pool.symbol}`,
+        });
+    }, [address, chainId, hash, pool.project, pool.symbol, submittedTxMeta]);
+
+    useEffect(() => {
             if (isConfirmed) {
+                if (hash && address && submittedTxMeta) {
+                updateActivityStatus(address, chainId, hash, 'confirmed');
+                setSubmittedTxMeta(null);
+            }
                 if (step === 'approving') {
                 queueMicrotask(() => setStep('idle'));
                 refetchAllowance();
@@ -147,12 +178,18 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
         } else if (isConfirming || isPending) {
             if (step !== 'approving' && step !== 'success') queueMicrotask(() => setStep("mining"));
         }
-    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchRadiant, refetchNative, refetchToken, refetchHealth, activeTab, toast]);
+    }, [isConfirmed, isConfirming, isPending, step, refetchAllowance, refetchAave, refetchRadiant, refetchNative, refetchToken, refetchHealth, activeTab, toast, hash, address, chainId, submittedTxMeta]);
 
     const handleAction = () => {
         if (!isConnected) { openConnectModal?.(); return; }
         const amountNum = parseFloat(amount || '0'); if (amountNum <= 0) return;
         const amountBig = parseUnits(amount, decimals);
+        const nextMeta = {
+            action: activeTab as "borrow" | "repay",
+            amount: amountNum,
+            amountUsd: amountNum * tokenPrice,
+        };
+        setSubmittedTxMeta(null);
 
         try {
             if (activeTab === 'borrow') {
@@ -160,8 +197,12 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
                     const poolAddress = isAave ? AAVE_POOL : RADIANT_LENDING_POOL;
                     if (isNative) {
                         const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
-                        if (gatewayAddress) writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'borrowETH', args: [poolAddress, amountBig, BigInt(2), 0] });
+                        if (gatewayAddress) {
+                            setSubmittedTxMeta(nextMeta);
+                            writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'borrowETH', args: [poolAddress, amountBig, BigInt(2), 0] });
+                        }
                     } else {
+                        setSubmittedTxMeta(nextMeta);
                         writeContract({
                             address: poolAddress,
                             abi: isAave ? AAVE_POOL_ABI : RADIANT_POOL_ABI,
@@ -184,9 +225,13 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false }: Borrow
                     if (isNative) {
                         const gatewayAddress = isAave ? AAVE_GATEWAY : RADIANT_GATEWAY;
                         // For repaying native asset, we must send value and call repayETH
-                        if (gatewayAddress) writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'repayETH', args: [poolAddress, amountBig, BigInt(2), address!], value: amountBig });
+                        if (gatewayAddress) {
+                            setSubmittedTxMeta(nextMeta);
+                            writeContract({ address: gatewayAddress, abi: WETH_GATEWAY_ABI, functionName: 'repayETH', args: [poolAddress, amountBig, BigInt(2), address!], value: amountBig });
+                        }
                     } else {
                         const assetAddr = underlyingAddress!;
+                        setSubmittedTxMeta(nextMeta);
                         writeContract({
                             address: poolAddress,
                             abi: isAave ? AAVE_POOL_ABI : RADIANT_POOL_ABI,

@@ -8,7 +8,7 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useAccount, useWriteContract, useReadContract, usePublicClient, useBalance } from 'wagmi';
+import { useAccount, useChainId, useWriteContract, useReadContract, usePublicClient, useBalance } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { AssetIcon } from "@/components/ui/asset-icon";
 import { useYields } from "@/hooks/useYields";
@@ -32,6 +32,7 @@ import {
     LOOP_VAULT_ABI,
 } from '@/lib/pool-config';
 import { isArbitrumFamily } from '@/lib/network';
+import { getExplorerTxUrl, upsertActivityRecord, updateActivityStatus } from '@/lib/activity';
 
 
 interface StrategyModalProps {
@@ -46,6 +47,7 @@ interface StrategyModalProps {
 
 export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalProps) {
     const { address } = useAccount();
+    const chainId = useChainId();
     const { toast } = useToast();
     const { openConnectModal } = useConnectModal();
     const { data: yields } = useYields();
@@ -402,10 +404,11 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
 
             setTxStep('executing');
             const txValue = isPayingWithNative ? rawAmount : BigInt(0);
+            let executionHash: `0x${string}`;
 
             if (protocol === 'aave-v3') {
                 // Contract wrapper name kept for backward compatibility.
-                await writeContractAsync({
+                executionHash = await writeContractAsync({
                     address: LOOP_VAULT_ADDRESS,
                     abi: LOOP_VAULT_ABI,
                     functionName: 'leverageAave',
@@ -413,18 +416,42 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                     value: txValue,
                 });
             } else if (protocol === 'radiant-v2') {
-                await writeContractAsync({
+                executionHash = await writeContractAsync({
                     address: LOOP_VAULT_ADDRESS,
                     abi: LOOP_VAULT_ABI,
                     functionName: 'leverageRadiant',
                     args: [inputTokenAddr, supplyAssetAddr, borrowAssetAddr, rawAmount, rawFlashAmount, rawBorrowAmount, legacyRouteHint],
                     value: txValue,
                 });
+            } else {
+                return;
+            }
+
+            if (address) {
+                upsertActivityRecord(address, chainId, {
+                    hash: executionHash,
+                    protocol,
+                    action: 'leverage',
+                    asset: `${tokenA}/${tokenB}`,
+                    amount: tokenAmount,
+                    amountUsd: principalUSD,
+                    status: 'pending',
+                    explorerUrl: getExplorerTxUrl(chainId, executionHash),
+                    summary: `${tokenA}/${tokenB} loop ${leverage.toFixed(2)}x`,
+                });
+
+                publicClient.waitForTransactionReceipt({ hash: executionHash })
+                    .then(() => {
+                        updateActivityStatus(address, chainId, executionHash, 'confirmed');
+                    })
+                    .catch(() => {
+                        updateActivityStatus(address, chainId, executionHash, 'failed');
+                    });
             }
 
             const protocolLabel = protocol === 'aave-v3' ? 'Aave V3' : 'Radiant';
             toast({
-                title: "Strategy Executed!",
+                title: "Strategy Submitted",
                 description: `${tokenA}/${tokenB} loop at ${leverage.toFixed(1)}x on ${protocolLabel}. Flash: $${(flashAmountFloat * priceA).toFixed(2)}, Fees: ~$${totalFeesUSD.toFixed(2)}`,
             });
             onClose();
