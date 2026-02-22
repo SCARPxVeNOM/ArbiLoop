@@ -2,11 +2,6 @@
 
 ArbiLoop is an Arbitrum-native DeFi risk and yield platform that combines strategy execution, live liquidation monitoring, historical PnL analytics, and Telegram alerts.
 
-## What Judges Should Know
-- Chain: Arbitrum (mainnet-ready)
-- Protocols: Aave V3, Radiant
-- Core value: detect risk early, act quickly, and track outcomes over time
-- Non-custodial: users execute from their own wallet
 
 ## Project Structure
 - `src/frontend`: Next.js app (dashboard, strategy UI, risk monitor, analytics, settings)
@@ -76,13 +71,6 @@ Run Telegram worker locally from repo root:
 ```bash
 .\run-bot-keepalive.cmd
 ```
-
-## Judge Verification Checklist
-1. Connect wallet and open dashboard/lend/portfolio pages.
-2. Verify strategy cards are actionable and open execution modal.
-3. Link Telegram and confirm bot commands (`/id`, `/verify`, `/status`).
-4. Check live alert feed updates from Supabase-backed rows.
-5. Check historical PnL/health charts are populated from indexed data.
 
 ## Additional Docs
 - `docs/DEPLOY_VERCEL_RENDER.md`
