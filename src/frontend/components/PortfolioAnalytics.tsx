@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { cn, formatMoney } from '@/lib/utils';
 import { usePortfolioHistory } from '@/hooks/usePortfolioHistory';
 import { useActivityTimeline } from '@/hooks/useActivityTimeline';
+import { useHistoricalPnl } from '@/hooks/useHistoricalPnl';
 import { ActivityRecord, ActivityAction } from '@/lib/activity';
 import { YieldData } from '@/hooks/useYields';
 import { getProtocolLabel } from '@/lib/protocols';
@@ -122,6 +123,7 @@ export function PortfolioAnalytics({
     onTriggerQuickAction,
 }: PortfolioAnalyticsProps) {
     const [range, setRange] = useState<HistoryRange>('7d');
+    const rangeDays = range === '24h' ? 1 : range === '7d' ? 7 : 30;
     const { history } = usePortfolioHistory({
         totalNetWorthUsd,
         totalSupplyUsd,
@@ -130,8 +132,13 @@ export function PortfolioAnalytics({
         isEnabled: !!address && !isLoading
     });
     const { records } = useActivityTimeline();
+    const { data: historicalPnl, isLoading: isHistoricalPnlLoading } = useHistoricalPnl({
+        walletAddress: address,
+        days: rangeDays,
+        enabled: !!address && !isLoading
+    });
 
-    const chartData = useMemo(() => {
+    const healthChartData = useMemo(() => {
         const now = Date.now();
         const windowMs =
             range === '24h'
@@ -155,25 +162,51 @@ export function PortfolioAnalytics({
                     }
                 ];
 
-        const baseline = seeded[0]?.netWorthUsd ?? totalNetWorthUsd;
         return seeded.map((point) => ({
             timestamp: point.timestamp,
             label: formatXAxis(point.timestamp, range),
             netWorthUsd: point.netWorthUsd,
             healthFactor: point.healthFactor,
-            pnlUsd: point.netWorthUsd - baseline,
         }));
     }, [history, overallHealthFactor, range, totalBorrowUsd, totalNetWorthUsd, totalSupplyUsd]);
 
+    const hasIndexedPnl = Boolean(historicalPnl?.indexed && (historicalPnl.points?.length || 0) > 0);
+
+    const pnlChartData = useMemo(() => {
+        if (hasIndexedPnl && historicalPnl) {
+            const depositedBase = Math.max(historicalPnl.summary?.totalDepositedUsd || 0, 1);
+            return historicalPnl.points.map((point) => {
+                const timestamp = new Date(`${point.day}T00:00:00.000Z`).getTime();
+                return {
+                    timestamp,
+                    label: formatXAxis(timestamp, range),
+                    pnlUsd: point.cumulativeRealizedUsd,
+                    netWorthUsd: depositedBase,
+                };
+            });
+        }
+
+        const baseline = healthChartData[0]?.netWorthUsd ?? totalNetWorthUsd;
+        return healthChartData.map((point) => ({
+            timestamp: point.timestamp,
+            label: point.label,
+            pnlUsd: point.netWorthUsd - baseline,
+            netWorthUsd: point.netWorthUsd,
+        }));
+    }, [hasIndexedPnl, healthChartData, historicalPnl, range, totalNetWorthUsd]);
+
     const pnlSummary = useMemo(() => {
-        const first = chartData[0];
-        const last = chartData[chartData.length - 1];
+        const first = pnlChartData[0];
+        const last = pnlChartData[pnlChartData.length - 1];
         if (!first || !last) return { usd: 0, pct: 0 };
 
-        const usd = last.netWorthUsd - first.netWorthUsd;
-        const pct = first.netWorthUsd > 0 ? (usd / first.netWorthUsd) * 100 : 0;
+        const usd = last.pnlUsd - first.pnlUsd;
+        const pctBase = hasIndexedPnl
+            ? Math.max(historicalPnl?.summary?.totalDepositedUsd || 0, 1)
+            : Math.max(first.netWorthUsd, 1);
+        const pct = (usd / pctBase) * 100;
         return { usd, pct };
-    }, [chartData]);
+    }, [hasIndexedPnl, historicalPnl?.summary?.totalDepositedUsd, pnlChartData]);
 
     const quickActions = useMemo(() => {
         const findPoolForPosition = (position: DashboardPosition | undefined) => {
@@ -258,7 +291,9 @@ export function PortfolioAnalytics({
                         <div>
                             <CardTitle className="text-lg md:text-xl">Historical PnL & Health</CardTitle>
                             <p className="text-xs text-muted-foreground mt-1">
-                                Wallet-based performance snapshots from live portfolio metrics
+                                {hasIndexedPnl
+                                    ? 'On-chain realized PnL from indexed Aave/Radiant events'
+                                    : 'Wallet-based performance snapshots from live portfolio metrics'}
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -286,7 +321,9 @@ export function PortfolioAnalytics({
                             <div className="text-lg font-bold text-white">{formatMoney(totalNetWorthUsd)}</div>
                         </div>
                         <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                            <div className="text-[10px] uppercase text-muted-foreground">Range PnL</div>
+                            <div className="text-[10px] uppercase text-muted-foreground">
+                                {hasIndexedPnl ? 'Realized PnL' : 'Range PnL'}
+                            </div>
                             <div className={cn('text-lg font-bold', pnlSummary.usd >= 0 ? 'text-blue-400' : 'text-red-400')}>
                                 {pnlSummary.usd >= 0 ? '+' : ''}{formatMoney(pnlSummary.usd)}
                             </div>
@@ -310,13 +347,23 @@ export function PortfolioAnalytics({
 
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="h-[220px] rounded-2xl border border-white/10 bg-[#08080a] p-3">
-                            <div className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">PnL Trend</div>
+                            <div className="mb-2 flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                                <span>{hasIndexedPnl ? 'Realized PnL Trend' : 'PnL Trend'}</span>
+                                <span className={cn(
+                                    'rounded-full border px-2 py-0.5 text-[9px] font-bold',
+                                    hasIndexedPnl
+                                        ? 'border-blue-500/30 bg-blue-500/10 text-blue-300'
+                                        : 'border-white/20 bg-white/5 text-muted-foreground'
+                                )}>
+                                    {hasIndexedPnl ? 'INDEXED' : (isHistoricalPnlLoading ? 'INDEXING' : 'LOCAL')}
+                                </span>
+                            </div>
                             <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={chartData}>
+                                <AreaChart data={pnlChartData}>
                                     <defs>
                                         <linearGradient id="pnlFill" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#34d399" stopOpacity={0.45} />
-                                            <stop offset="95%" stopColor="#34d399" stopOpacity={0.02} />
+                                            <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.45} />
+                                            <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.02} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -324,10 +371,10 @@ export function PortfolioAnalytics({
                                     <YAxis tick={{ fill: '#9ca3af', fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(value) => formatMoney(value)} width={70} />
                                     <RechartsTooltip
                                         contentStyle={{ backgroundColor: '#09090b', border: '1px solid #27272a' }}
-                                        formatter={(value: number | undefined) => [formatMoney(value ?? 0), 'PnL']}
+                                        formatter={(value: number | undefined) => [formatMoney(value ?? 0), hasIndexedPnl ? 'Realized PnL' : 'PnL']}
                                         labelFormatter={(label) => `${label}`}
                                     />
-                                    <Area type="monotone" dataKey="pnlUsd" stroke="#34d399" strokeWidth={2} fill="url(#pnlFill)" />
+                                    <Area type="monotone" dataKey="pnlUsd" stroke="#3B82F6" strokeWidth={2} fill="url(#pnlFill)" />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
@@ -335,7 +382,7 @@ export function PortfolioAnalytics({
                         <div className="h-[220px] rounded-2xl border border-white/10 bg-[#08080a] p-3">
                             <div className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">Health Trend</div>
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={chartData}>
+                                <LineChart data={healthChartData}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                                     <XAxis dataKey="label" tick={{ fill: '#9ca3af', fontSize: 10 }} tickLine={false} axisLine={false} />
                                     <YAxis tick={{ fill: '#9ca3af', fontSize: 10 }} tickLine={false} axisLine={false} domain={[0.8, 'dataMax + 0.5']} width={45} />
@@ -426,9 +473,7 @@ export function PortfolioAnalytics({
                                             <div className="text-sm font-semibold text-white">
                                                 {actionLabel(record.action)} {record.asset}
                                             </div>
-                                            <div className="text-[11px] text-muted-foreground">
-                                                {protocolLabel} â€¢ {formatTimelineDate(record.createdAt)}
-                                            </div>
+                                            <div className="text-[11px] text-muted-foreground">{protocolLabel} - {formatTimelineDate(record.createdAt)}</div>
                                         </div>
                                     </div>
 

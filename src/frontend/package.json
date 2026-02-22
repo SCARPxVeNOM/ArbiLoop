@@ -8,7 +8,8 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "smoke:vault": "node scripts/smoke-vault.mjs"
+    "smoke:vault": "node scripts/smoke-vault.mjs",
+    "indexer:pnl": "node scripts/pnl-indexer.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.41.0",

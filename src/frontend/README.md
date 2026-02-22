@@ -40,6 +40,22 @@ npm run build
 - `GEMINI_API_KEY`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (required for `npm run indexer:pnl`)
+- `ARBITRUM_RPC_URL` (optional RPC override for indexing scripts)
+
+## Historical Realized PnL Indexer
+
+To power full-chain realized PnL charts, run the indexer:
+
+```bash
+npm run indexer:pnl
+```
+
+The worker:
+- Reads Aave/Radiant logs on Arbitrum
+- Stores normalized events in Supabase (`wallet_activity_events`)
+- Rebuilds realized basis per wallet (`wallet_pnl_positions`, `wallet_pnl_daily`)
+- Feeds `GET /api/pnl/history` for dashboard charts
 
 ## Notes
 
