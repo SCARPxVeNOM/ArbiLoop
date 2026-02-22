@@ -15,6 +15,7 @@ If you already ran an older migration, run the latest `migrations.sql` again to 
 - Wallet address
 - Alert threshold and polling interval
 - Daily update preferences
+- Live alert feed rows (`liquidation_alerts`)
 - Indexed on-chain lending actions (`wallet_activity_events`)
 - Realized PnL basis per asset (`wallet_pnl_positions`)
 - Daily realized/cumulative PnL points (`wallet_pnl_daily`)

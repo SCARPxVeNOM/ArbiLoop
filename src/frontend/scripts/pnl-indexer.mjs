@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import {
   createPublicClient,
@@ -628,7 +629,7 @@ async function processProtocol({
   return affectedWallets;
 }
 
-async function main() {
+export async function runPnlIndexer() {
   const envPath = path.join(process.cwd(), '.env.local');
   const fileEnv = loadEnvFile(envPath);
   const env = { ...fileEnv, ...process.env };
@@ -718,7 +719,13 @@ async function main() {
   console.log(`Completed. Wallets refreshed: ${affectedWallets.size}`);
 }
 
-main().catch((error) => {
-  console.error('PnL indexer failed:', error?.message || error);
-  process.exit(1);
-});
+const currentFilePath = fileURLToPath(import.meta.url);
+const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : '';
+const isDirectRun = invokedPath === currentFilePath;
+
+if (isDirectRun) {
+  runPnlIndexer().catch((error) => {
+    console.error('PnL indexer failed:', error?.message || error);
+    process.exit(1);
+  });
+}

@@ -116,7 +116,6 @@ export default function LandingPage() {
 
                   </div>
                   <div className="md:col-span-2 transform hover:scale-[1.02] transition-transform duration-500 delay-100">
-                    {/* Placeholder for LiquidationAlerts - need to import it first */}
                     <LiquidationAlerts />
                   </div>
                 </div>

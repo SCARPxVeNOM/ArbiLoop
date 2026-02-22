@@ -205,6 +205,73 @@ begin
   end if;
 end $$;
 
+-- =============================================
+-- Live Liquidation Alerts Feed
+-- =============================================
+-- Written by the bot monitor worker and read by the frontend alerts widget.
+
+create table if not exists public.liquidation_alerts (
+  id bigserial primary key,
+  chat_id bigint,
+  wallet_address text not null,
+  chain_id integer not null,
+  protocol text not null,
+  severity text not null default 'warning',
+  health_factor numeric,
+  threshold numeric,
+  title text not null,
+  message text not null,
+  sent_to_telegram boolean not null default false,
+  telegram_error text,
+  metadata jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+
+  constraint liquidation_alerts_wallet_address_check check (length(wallet_address) = 42),
+  constraint liquidation_alerts_severity_check check (severity in ('info', 'warning', 'critical'))
+);
+
+create index if not exists idx_liquidation_alerts_wallet_created
+  on public.liquidation_alerts(wallet_address, chain_id, created_at desc);
+create index if not exists idx_liquidation_alerts_protocol_created
+  on public.liquidation_alerts(protocol, chain_id, created_at desc);
+create index if not exists idx_liquidation_alerts_created
+  on public.liquidation_alerts(created_at desc);
+
+alter table public.liquidation_alerts enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'liquidation_alerts'
+      and policyname = 'Read liquidation alerts'
+  ) then
+    create policy "Read liquidation alerts" on public.liquidation_alerts
+      for select
+      to anon, authenticated
+      using (true);
+  end if;
+end $$;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'liquidation_alerts'
+      and policyname = 'Service role write liquidation alerts'
+  ) then
+    create policy "Service role write liquidation alerts" on public.liquidation_alerts
+      for all
+      to service_role
+      using (true)
+      with check (true);
+  end if;
+end $$;
+
 do $$
 begin
   if not exists (

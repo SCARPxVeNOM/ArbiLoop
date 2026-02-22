@@ -1,10 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { AssetIcon } from "@/components/ui/asset-icon";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2, Shield, ShieldCheck } from 'lucide-react';
+import { Loader2, Shield } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { useSmartLoops, SmartLoop } from '@/hooks/useSmartLoops';
 
@@ -21,8 +19,7 @@ interface TopLoopsProps {
 }
 
 export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: TopLoopsProps) {
-    const router = useRouter();
-    const { loops, isLoading, getTopLoops, getStableLoops, getByProtocol } = useSmartLoops();
+    const { isLoading, getTopLoops, getStableLoops } = useSmartLoops();
     const [filter, setFilter] = useState<FilterType>('all');
     const [selectedLoop, setSelectedLoop] = useState<SmartLoop | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,12 +121,12 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                 : 'md:grid-cols-2 lg:grid-cols-4 gap-6'
                 }`}>
                 {displayLoops.map((loop) => {
-                    const isActive = loop.supplyAsset === 'USDT' && loop.borrowAsset === 'ETH';
+                    const isActive = true;
 
                     return (
                         <div
                             key={loop.id}
-                            onClick={() => isActive && handleMultiply(loop)}
+                            onClick={() => handleMultiply(loop)}
                             className={`group relative bg-[#0f0f12] border rounded-2xl transition-all duration-300 overflow-hidden ${isActive
                                 ? 'border-[#3B82F6]/50 shadow-2xl shadow-[#3B82F6]/10 cursor-pointer hover:-translate-y-1'
                                 : 'border-white/5 opacity-50 cursor-not-allowed grayscale-[0.5]'
@@ -248,9 +245,6 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                                             Supply: {loop.supplyApy.toFixed(1)}% | Borrow: {loop.borrowApy.toFixed(1)}%
                                         </div>
                                     </div>
-
-                                    {/* Button */}
-
                                 </>
                             )}
                         </div>

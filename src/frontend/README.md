@@ -5,6 +5,11 @@ ArbiLoop is an Arbitrum-focused frontend for monitoring and executing DeFi lendi
 - Aave V3
 - Radiant
 
+Key live features:
+- wallet-aware liquidation alert feed (from Supabase `liquidation_alerts`)
+- strategy execution for all surfaced loop cards
+- realized PnL charts backed by indexed on-chain data
+
 ## Run Locally
 
 1. Install dependencies:

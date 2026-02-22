@@ -111,6 +111,8 @@ function statusClass(status: ActivityRecord['status']) {
     return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
 }
 
+const FALLBACK_CHART_TIMESTAMP = Date.UTC(2024, 0, 1);
+
 export function PortfolioAnalytics({
     address,
     isLoading,
@@ -139,14 +141,16 @@ export function PortfolioAnalytics({
     });
 
     const healthChartData = useMemo(() => {
-        const now = Date.now();
+        const latestTimestamp = history.length > 0
+            ? history[history.length - 1].timestamp
+            : FALLBACK_CHART_TIMESTAMP;
         const windowMs =
             range === '24h'
                 ? 24 * 60 * 60 * 1000
                 : range === '7d'
                     ? 7 * 24 * 60 * 60 * 1000
                     : 30 * 24 * 60 * 60 * 1000;
-        const cutoff = now - windowMs;
+        const cutoff = latestTimestamp - windowMs;
 
         const points = history.filter((point) => point.timestamp >= cutoff);
         const seeded =
@@ -154,7 +158,7 @@ export function PortfolioAnalytics({
                 ? points
                 : [
                     {
-                        timestamp: now,
+                        timestamp: latestTimestamp,
                         netWorthUsd: totalNetWorthUsd,
                         totalSupplyUsd,
                         totalBorrowUsd,
