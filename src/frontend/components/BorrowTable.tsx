@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -261,7 +261,7 @@ export function BorrowTable() {
                                         </div>
 
                                         {/* Liquidity */}
-                                        <div className="hidden md:block col-span-2 text-right font-mono text-emerald-400 text-sm">
+                                        <div className="hidden md:block col-span-2 text-right font-mono text-blue-400 text-sm">
                                             {formatMoney(availableLiquidity)}
                                         </div>
 
@@ -338,7 +338,7 @@ export function BorrowTable() {
                                     <div className="grid grid-cols-2 gap-4 py-4 border-t border-white/5">
                                         <div>
                                             <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Available</div>
-                                            <div className="font-mono font-medium text-emerald-400">{formatMoney(availableLiquidity)}</div>
+                                            <div className="font-mono font-medium text-blue-400">{formatMoney(availableLiquidity)}</div>
                                         </div>
                                         <div className="text-right">
                                             <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">Your Debt</div>
@@ -384,3 +384,4 @@ export function BorrowTable() {
         </div>
     );
 }
+

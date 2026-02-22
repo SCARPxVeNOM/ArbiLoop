@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 
@@ -118,7 +118,7 @@ export function Dashboard() {
         <div className="container pt-0 md:pt-8 pb-24 space-y-8 max-w-screen-2xl mx-auto px-4 md:px-16">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-2 font-outfit bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400">
+                    <h1 className="text-3xl font-bold tracking-tight mb-2 font-outfit bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                         Dashboard
                     </h1>
                     <div className="text-sm text-muted-foreground">
@@ -126,8 +126,8 @@ export function Dashboard() {
                     </div>
                 </div>
                 {address && (
-                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#CEFF00]/10 border border-[#CEFF00]/20 text-[#CEFF00] text-xs font-bold uppercase tracking-wider animate-pulse">
-                        <div className="w-2 h-2 rounded-full bg-[#CEFF00]" />
+                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/20 text-[#3B82F6] text-xs font-bold uppercase tracking-wider animate-pulse">
+                        <div className="w-2 h-2 rounded-full bg-[#3B82F6]" />
                         AI Risk Agent Active
                     </div>
                 )}
@@ -142,8 +142,8 @@ export function Dashboard() {
                 <div className="group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 p-5 md:p-8 transition-all hover:bg-white/[0.04] shadow-2xl">
                     <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-5 md:mb-8">
-                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
-                                <span className="text-lg md:text-xl font-black text-emerald-500">$</span>
+                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                                <span className="text-lg md:text-xl font-black text-blue-500">$</span>
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-muted-foreground/40 leading-none">Net Worth</span>
@@ -154,12 +154,12 @@ export function Dashboard() {
                                 {!address ? '$0.00' : isDashboardLoading ? <Skeleton className="h-8 md:h-12 w-32 md:w-48 bg-white/10" /> : `$${totalNetWorth.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                             </div>
                             <div className="flex items-center gap-2 h-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                 {isDashboardLoading && address ? (
-                                    <Skeleton className="h-3 w-20 bg-emerald-500/10" />
+                                    <Skeleton className="h-3 w-20 bg-blue-500/10" />
                                 ) : (
                                     <div className="flex items-baseline gap-1.5">
-                                        <span className="text-sm font-black text-emerald-400 leading-none">
+                                        <span className="text-sm font-black text-blue-400 leading-none">
                                             {globalNetAPY > 0 ? '+' : ''}{globalNetAPY.toFixed(2)}%
                                         </span>
                                         <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">
@@ -176,21 +176,21 @@ export function Dashboard() {
                 <div className="group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 p-5 md:p-8 transition-all hover:bg-white/[0.04] shadow-2xl">
                     <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-5 md:mb-8">
-                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-emerald-400/10 flex items-center justify-center border border-emerald-400/20 shrink-0">
-                                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
+                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-blue-400/10 flex items-center justify-center border border-blue-400/20 shrink-0">
+                                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-muted-foreground/40 leading-none">Supplied</span>
                             </div>
                         </div>
                         <div>
-                            <div className="text-2xl md:text-5xl font-bold text-emerald-400 leading-none tracking-tight mb-2 md:mb-3 h-[1.2em] flex items-center">
-                                {!address ? '$0.00' : isDashboardLoading ? <Skeleton className="h-8 md:h-12 w-32 md:w-48 bg-emerald-400/10" /> : `$${totalSupplied.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                            <div className="text-2xl md:text-5xl font-bold text-blue-400 leading-none tracking-tight mb-2 md:mb-3 h-[1.2em] flex items-center">
+                                {!address ? '$0.00' : isDashboardLoading ? <Skeleton className="h-8 md:h-12 w-32 md:w-48 bg-blue-400/10" /> : `$${totalSupplied.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                             </div>
                             <div className="flex items-center gap-2 h-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
                                 {isDashboardLoading && address ? (
-                                    <Skeleton className="h-3 w-16 bg-emerald-400/10" />
+                                    <Skeleton className="h-3 w-16 bg-blue-400/10" />
                                 ) : (
                                     <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">Active</span>
                                 )}
@@ -235,21 +235,21 @@ export function Dashboard() {
                     </div>
                     <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-5 md:mb-8">
-                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
-                                <span className="text-lg md:text-xl font-black text-emerald-500">$</span>
+                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                                <span className="text-lg md:text-xl font-black text-blue-500">$</span>
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-muted-foreground/40 leading-none">Est. Earnings</span>
                             </div>
                         </div>
                         <div>
-                            <div className="text-2xl md:text-5xl font-bold text-emerald-400 leading-none tracking-tight mb-2 md:mb-3 h-[1.2em] flex items-center">
-                                {!address ? '$0.00' : isDashboardLoading ? <Skeleton className="h-8 md:h-12 w-32 md:w-48 bg-emerald-400/10" /> : `$${(totalNetWorth * (globalNetAPY / 100)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                            <div className="text-2xl md:text-5xl font-bold text-blue-400 leading-none tracking-tight mb-2 md:mb-3 h-[1.2em] flex items-center">
+                                {!address ? '$0.00' : isDashboardLoading ? <Skeleton className="h-8 md:h-12 w-32 md:w-48 bg-blue-400/10" /> : `$${(totalNetWorth * (globalNetAPY / 100)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                             </div>
                             <div className="flex items-center gap-2 h-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                 {isDashboardLoading && address ? (
-                                    <Skeleton className="h-3 w-32 bg-emerald-500/10" />
+                                    <Skeleton className="h-3 w-32 bg-blue-500/10" />
                                 ) : (
                                     <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">Projected Annual Yield</span>
                                 )}
@@ -275,7 +275,7 @@ export function Dashboard() {
                 {[
                     {
                         name: getProtocolLabel('aave-v3'),
-                        img: getProtocolIcon('aave-v3') || '/aave.png',
+                        img: getProtocolIcon('aave-v3') || '/aave-logo.webp',
                         supply: aave.totalSupplyUSD,
                         borrow: aave.totalBorrowUSD,
                         health: healthData.aave,
@@ -317,12 +317,12 @@ export function Dashboard() {
                                 {isDashboardLoading && address ? (
                                     <Skeleton className="h-6 w-16 rounded-full" />
                                 ) : (
-                                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${proto.health.status === 'safe' ? 'bg-emerald-500/20 text-emerald-500' :
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 ${proto.health.status === 'safe' ? 'bg-blue-500/20 text-blue-500' :
                                         proto.health.status === 'warning' ? 'bg-amber-500/20 text-amber-400' :
                                             proto.health.status === 'danger' ? 'bg-red-500/20 text-red-500' :
                                                 'bg-muted/50 text-muted-foreground'
                                         }`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full ${proto.health.status === 'safe' ? 'bg-emerald-400' :
+                                        <span className={`w-1.5 h-1.5 rounded-full ${proto.health.status === 'safe' ? 'bg-blue-400' :
                                             proto.health.status === 'warning' ? 'bg-amber-400' :
                                                 proto.health.status === 'danger' ? 'bg-red-400' : 'bg-muted-foreground'
                                             }`} />
@@ -336,7 +336,7 @@ export function Dashboard() {
                                     <Skeleton className="h-6 w-14 rounded-full" />
                                 ) : (
                                     proto.supply > 0 && (
-                                        <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                                        <span className="text-xs font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
                                             {proto.apy.toFixed(2)}%
                                         </span>
                                     )
@@ -364,3 +364,4 @@ export function Dashboard() {
         </div>
     )
 }
+

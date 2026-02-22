@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Bell, ShieldCheck, Siren, TrendingDown } from 'lucide-react';
 import { Card } from "@/components/ui/card";
@@ -8,10 +8,10 @@ export function LiquidationAlerts() {
         <Card className="w-full bg-[#121216] border border-white/10 shadow-lg p-6 space-y-4">
             <div className="flex items-center justify-between mb-2">
                 <h3 className="font-bold text-white flex items-center gap-2">
-                    <Bell className="text-[#CEFF00]" size={18} />
+                    <Bell className="text-[#3B82F6]" size={18} />
                     Active Alerts via Telegram
                 </h3>
-                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">System Online</span>
+                <span className="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20">System Online</span>
             </div>
 
             <div className="space-y-3">
@@ -57,8 +57,9 @@ export function LiquidationAlerts() {
             </div>
 
             <div className="pt-2 text-center">
-                <button className="text-xs text-muted-foreground hover:text-[#CEFF00] underline decoration-dotted">View All Notifications</button>
+                <button className="text-xs text-muted-foreground hover:text-[#3B82F6] underline decoration-dotted">View All Notifications</button>
             </div>
         </Card >
     );
 }
+

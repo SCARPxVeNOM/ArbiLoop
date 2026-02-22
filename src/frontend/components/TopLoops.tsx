@@ -72,7 +72,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                     {!compact && (
                         <button
                             onClick={() => setIsInfoOpen(true)}
-                            className="p-1.5 rounded-full hover:bg-white/10 transition-colors text-muted-foreground hover:text-[#CEFF00]"
+                            className="p-1.5 rounded-full hover:bg-white/10 transition-colors text-muted-foreground hover:text-[#3B82F6]"
                             title="How strategies work"
                         >
                             <Info size={18} />
@@ -93,7 +93,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                                     key={f.key}
                                     onClick={() => setFilter(f.key as FilterType)}
                                     className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all flex items-center gap-1.5 ${filter === f.key
-                                        ? 'bg-[#CEFF00] text-black shadow-lg'
+                                        ? 'bg-[#3B82F6] text-white shadow-lg'
                                         : 'text-muted-foreground hover:text-white'
                                         }`}
                                 >
@@ -131,13 +131,13 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                             key={loop.id}
                             onClick={() => isActive && handleMultiply(loop)}
                             className={`group relative bg-[#0f0f12] border rounded-2xl transition-all duration-300 overflow-hidden ${isActive
-                                ? 'border-[#CEFF00]/50 shadow-2xl shadow-[#CEFF00]/10 cursor-pointer hover:-translate-y-1'
+                                ? 'border-[#3B82F6]/50 shadow-2xl shadow-[#3B82F6]/10 cursor-pointer hover:-translate-y-1'
                                 : 'border-white/5 opacity-50 cursor-not-allowed grayscale-[0.5]'
                                 } ${compact ? 'p-3' : 'p-4 md:p-6'}`}
                         >
                             {!compact && (
                                 <div className={`absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${isActive
-                                    ? 'text-[#CEFF00] bg-[#CEFF00]/10 border-[#CEFF00]/20'
+                                    ? 'text-[#3B82F6] bg-[#3B82F6]/10 border-[#3B82F6]/20'
                                     : 'text-muted-foreground bg-white/5 border-white/5'
                                     }`}>
                                     {isActive ? 'Active' : 'Inactive'} <span className="text-white/20 mx-1">|</span> {loop.protocolDisplay}
@@ -168,7 +168,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
 
                                         <div className="flex flex-col">
                                             <div className="flex items-center gap-2">
-                                                <h3 className="font-bold text-white text-sm leading-none group-hover:text-[#CEFF00] transition-colors">
+                                                <h3 className="font-bold text-white text-sm leading-none group-hover:text-[#3B82F6] transition-colors">
                                                     {loop.pair}
                                                 </h3>
                                                 <Badge variant="secondary" className="text-[9px] h-4 px-1 rounded bg-white/5 text-muted-foreground border-none">
@@ -182,10 +182,10 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                                     </div>
 
                                     <div className="text-right">
-                                        <div className="font-bold font-mono text-[#CEFF00] text-lg leading-none">
+                                        <div className="font-bold font-mono text-[#3B82F6] text-lg leading-none">
                                             +{loop.leveragedApy}%
                                         </div>
-                                        <div className={`text-[9px] mt-0.5 ${loop.risk === 'Low' ? 'text-emerald-400' : loop.risk === 'Medium' ? 'text-amber-400' : 'text-red-400'}`}>
+                                        <div className={`text-[9px] mt-0.5 ${loop.risk === 'Low' ? 'text-blue-400' : loop.risk === 'Medium' ? 'text-amber-400' : 'text-red-400'}`}>
                                             {loop.risk} Risk
                                         </div>
                                     </div>
@@ -212,7 +212,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                                     </div>
 
                                     {/* Pair Name */}
-                                    <h3 className="font-bold text-white group-hover:text-[#CEFF00] transition-colors text-lg mb-1">
+                                    <h3 className="font-bold text-white group-hover:text-[#3B82F6] transition-colors text-lg mb-1">
                                         {loop.pair} Strategy
                                     </h3>
 
@@ -221,7 +221,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                                         <Badge
                                             variant="secondary"
                                             className={`text-[9px] border-none ${loop.risk === 'Low'
-                                                ? 'bg-emerald-500/10 text-emerald-400'
+                                                ? 'bg-blue-500/10 text-blue-400'
                                                 : loop.risk === 'Medium'
                                                     ? 'bg-amber-500/10 text-amber-400'
                                                     : 'bg-red-500/10 text-red-400'
@@ -241,7 +241,7 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
                                         <div className="text-[10px] text-muted-foreground mb-0.5">
                                             Max {loop.maxLeverage}x Leverage
                                         </div>
-                                        <div className="font-bold font-mono text-[#CEFF00] text-3xl">
+                                        <div className="font-bold font-mono text-[#3B82F6] text-3xl">
                                             +{loop.leveragedApy}%
                                         </div>
                                         <div className="text-[10px] text-muted-foreground mt-1">
@@ -283,3 +283,4 @@ export function TopLoops({ compact = false, maxItems = 5, showFilters = true }: 
         </div>
     );
 }
+

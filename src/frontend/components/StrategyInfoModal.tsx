@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
     Dialog,
@@ -95,10 +95,10 @@ export function StrategyInfoModal({ isOpen, onClose }: StrategyInfoModalProps) {
 
                             <TabsContent value="benefits" className="space-y-4">
                                 <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                    <div className="p-4 border border-emerald-500/20 bg-emerald-500/5 rounded-xl">
+                                    <div className="p-4 border border-blue-500/20 bg-blue-500/5 rounded-xl">
                                         <div className="flex items-center gap-2 mb-2">
-                                            <TrendingUp className="w-5 h-5 text-emerald-400" />
-                                            <h3 className="font-bold text-emerald-400">Amplified APY</h3>
+                                            <TrendingUp className="w-5 h-5 text-blue-400" />
+                                            <h3 className="font-bold text-blue-400">Amplified APY</h3>
                                         </div>
                                         <p className="text-sm text-muted-foreground">
                                             Since your earning position is larger than your initial capital, the net APY is multiplied. If the supply APY is higher than the borrow APY, your returns effectively stack.
@@ -144,7 +144,7 @@ export function StrategyInfoModal({ isOpen, onClose }: StrategyInfoModalProps) {
                 <div className="p-4 border-t border-white/5 bg-white/[0.02]">
                     <button
                         onClick={onClose}
-                        className="w-full py-2.5 rounded-lg font-bold bg-[#CEFF00] hover:bg-[#b8e600] text-black transition-colors text-sm"
+                        className="w-full py-2.5 rounded-lg font-bold bg-[#3B82F6] hover:bg-[#2563EB] text-white transition-colors text-sm"
                     >
                         Got it
                     </button>
@@ -153,4 +153,5 @@ export function StrategyInfoModal({ isOpen, onClose }: StrategyInfoModalProps) {
         </Dialog>
     );
 }
+
 

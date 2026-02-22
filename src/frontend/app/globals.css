@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @theme {
   --color-border: hsl(var(--border));
@@ -101,9 +101,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 4%;
 
-    /* Neon Lime #CEFF00 -> HSL 74 100% 50% */
-    --primary: 74 100% 50%;
-    --primary-foreground: 240 10% 3.9%;
+    /* Blue #3B82F6 -> HSL 217 91% 60% */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 240 5% 96%;
     --secondary-foreground: 240 5% 9%;
@@ -119,7 +119,7 @@
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 74 100% 50%;
+    --ring: 217 91% 60%;
 
     --radius: 0.75rem;
   }
@@ -135,8 +135,8 @@
     --popover: 240 10% 7%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 74 100% 50%;
-    --primary-foreground: 240 10% 3.9%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 240 5% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -152,7 +152,7 @@
 
     --border: 240 5% 15%;
     --input: 240 5% 15%;
-    --ring: 74 100% 50%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -179,3 +179,4 @@
     outline: none !important;
   }
 }
+

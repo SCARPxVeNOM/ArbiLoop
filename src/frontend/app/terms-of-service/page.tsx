@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Scale, AlertTriangle, CloudOff, ShieldAlert } from 'lucide-react';
 
@@ -9,7 +9,7 @@ export default function TermsOfService() {
         <main className="min-h-screen bg-background text-foreground font-sans relative overflow-hidden">
             {/* Background Gradients (Distinct from Privacy Policy slightly, or same theme) */}
             <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#CEFF00]/5 rounded-full blur-[120px]"></div>
+                <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#3B82F6]/5 rounded-full blur-[120px]"></div>
                 <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[120px]"></div>
             </div>
 
@@ -17,7 +17,7 @@ export default function TermsOfService() {
 
                 {/* Back Button */}
                 <div className="mb-8">
-                    <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-[#CEFF00] transition-colors group">
+                    <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-[#3B82F6] transition-colors group">
                         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                         Back to Home
                     </Link>
@@ -25,7 +25,7 @@ export default function TermsOfService() {
 
                 {/* Header */}
                 <div className="mb-12 border-b border-white/10 pb-8">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-[#CEFF00]/10 border border-[#CEFF00]/20 text-[#CEFF00] text-xs font-bold tracking-wide uppercase">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/20 text-[#3B82F6] text-xs font-bold tracking-wide uppercase">
                         <Scale size={12} />
                         Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                     </div>
@@ -41,7 +41,7 @@ export default function TermsOfService() {
                     {/* Section 1 */}
                     <section>
                         <h2 className="text-2xl font-bold font-outfit mb-4 flex items-center gap-3">
-                            <div className="h-8 w-8 rounded-lg bg-[#CEFF00]/10 flex items-center justify-center text-[#CEFF00]">
+                            <div className="h-8 w-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6]">
                                 <span className="font-bold">1</span>
                             </div>
                             Acceptance of Terms
@@ -79,7 +79,7 @@ export default function TermsOfService() {
                     {/* Section 3 */}
                     <section>
                         <h2 className="text-2xl font-bold font-outfit mb-4 flex items-center gap-3">
-                            <div className="h-8 w-8 rounded-lg bg-[#CEFF00]/10 flex items-center justify-center text-[#CEFF00]">
+                            <div className="h-8 w-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6]">
                                 <CloudOff size={18} />
                             </div>
                             3. Non-Custodial Nature
@@ -97,7 +97,7 @@ export default function TermsOfService() {
                     {/* Section 4 */}
                     <section>
                         <h2 className="text-2xl font-bold font-outfit mb-4 flex items-center gap-3">
-                            <div className="h-8 w-8 rounded-lg bg-[#CEFF00]/10 flex items-center justify-center text-[#CEFF00]">
+                            <div className="h-8 w-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6]">
                                 <ShieldAlert size={18} />
                             </div>
                             4. Limitation of Liability
@@ -123,4 +123,5 @@ export default function TermsOfService() {
         </main>
     );
 }
+
 

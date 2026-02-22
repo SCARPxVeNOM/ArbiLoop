@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
@@ -43,12 +43,12 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
                 />
                 <div className="relative w-full h-2 bg-secondary rounded-full overflow-hidden">
                     <div
-                        className="absolute h-full bg-[#CEFF00]"
+                        className="absolute h-full bg-[#3B82F6]"
                         style={{ width: `${percentage}%` }}
                     />
                 </div>
                 <div
-                    className="absolute h-5 w-5 rounded-full border-2 border-[#CEFF00] bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-10 pointer-events-none"
+                    className="absolute h-5 w-5 rounded-full border-2 border-[#3B82F6] bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 z-10 pointer-events-none"
                     style={{ left: `calc(${percentage}% - 10px)` }}
                 />
             </div>
@@ -58,3 +58,4 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
 Slider.displayName = "Slider"
 
 export { Slider }
+

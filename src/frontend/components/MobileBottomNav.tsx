@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -52,7 +52,7 @@ export function MobileBottomNav() {
                         >
                             {isActive && (
                                 <motion.div
-                                    className="absolute -top-[1px] w-12 h-[2px] bg-[#CEFF00] shadow-[0_0_10px_#CEFF00]"
+                                    className="absolute -top-[1px] w-12 h-[2px] bg-[#3B82F6] shadow-[0_0_10px_#3B82F6]"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
@@ -62,7 +62,7 @@ export function MobileBottomNav() {
 
                             <div className={cn(
                                 "flex flex-col items-center gap-1 transition-colors duration-200",
-                                isActive ? "text-[#CEFF00]" : "text-muted-foreground hover:text-white"
+                                isActive ? "text-[#3B82F6]" : "text-muted-foreground hover:text-white"
                             )}>
                                 <Icon className="w-5 h-5" />
                                 <span className="text-[10px] font-medium">{tab.name}</span>
@@ -74,3 +74,4 @@ export function MobileBottomNav() {
         </div>
     );
 }
+

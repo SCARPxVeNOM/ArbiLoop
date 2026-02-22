@@ -59,7 +59,7 @@ export function Hero() {
                                             Launch App <Zap className="h-5 w-5" />
                                         </Button>
                                     </Link>
-                                    <Link href="/strategy">
+                                    <Link href="/lend/strategy">
                                         <Button variant="outline" size="lg" className="gap-2 h-14">
                                             Manage Strategies <ArrowRight className="h-4 w-4" />
                                         </Button>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -29,7 +29,7 @@ const Footer = () => {
                                     className="object-contain"
                                 />
                             </div>
-                            <span className="font-outfit font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400">
+                            <span className="font-outfit font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                                 ArbiLoop
                             </span>
                         </Link>
@@ -111,4 +111,5 @@ const Footer = () => {
 };
 
 export { Footer };
+
 

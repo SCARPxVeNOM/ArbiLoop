@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Suspense } from 'react';
 import { EarnTable } from "@/components/EarnTable";
@@ -26,7 +26,7 @@ export default function EarnPage() {
                 Passively get yield using ArbiLoop Lend.
                 <span
                     onClick={() => setIsInfoModalOpen(true)}
-                    className="text-emerald-400 flex items-center gap-1.5 font-bold cursor-pointer hover:underline transition-all"
+                    className="text-blue-400 flex items-center gap-1.5 font-bold cursor-pointer hover:underline transition-all"
                 >
                     How it works <HelpCircle className="w-4 h-4" />
                 </span>
@@ -39,4 +39,5 @@ export default function EarnPage() {
         </div>
     );
 }
+
 

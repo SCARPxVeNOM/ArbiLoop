@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import * as React from 'react';
 import {
@@ -30,8 +30,8 @@ function RainbowKitThemedProvider({ children }: { children: React.ReactNode }) {
     return (
         <RainbowKitProvider
             theme={darkTheme({
-                accentColor: '#CEFF00', // Neon Lime
-                accentColorForeground: 'black',
+                accentColor: '#3B82F6', // Blue
+                accentColorForeground: 'white',
                 borderRadius: 'medium',
                 fontStack: 'system',
             })}
@@ -40,3 +40,4 @@ function RainbowKitThemedProvider({ children }: { children: React.ReactNode }) {
         </RainbowKitProvider>
     );
 }
+

@@ -61,7 +61,7 @@ export default function MarketDetailPage() {
                                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                         <div className="p-4 rounded-xl border border-white/10 bg-black/20">
                                             <div className="text-xs text-muted-foreground uppercase">Supply APY</div>
-                                            <div className="text-2xl font-bold text-emerald-400">{currentPool.apy.toFixed(2)}%</div>
+                                            <div className="text-2xl font-bold text-blue-400">{currentPool.apy.toFixed(2)}%</div>
                                         </div>
                                         <div className="p-4 rounded-xl border border-white/10 bg-black/20">
                                             <div className="text-xs text-muted-foreground uppercase">Borrow APY</div>
@@ -104,7 +104,7 @@ export default function MarketDetailPage() {
                                     <div className="space-y-1 text-sm">
                                         <div className="flex justify-between">
                                             <span className="text-muted-foreground">Supply</span>
-                                            <span className="text-emerald-400 font-mono font-bold">{pool.apy.toFixed(2)}%</span>
+                                            <span className="text-blue-400 font-mono font-bold">{pool.apy.toFixed(2)}%</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-muted-foreground">Borrow</span>
@@ -156,7 +156,7 @@ export default function MarketDetailPage() {
                                 </div>
 
                                 <Link href={activeTab === 'lend' ? '/lend/earn' : '/lend/borrow'}>
-                                    <Button className="w-full h-14 text-lg font-bold bg-[#ceff00] text-black hover:bg-[#b8e600] rounded-xl shadow-[0_0_20px_rgba(206,255,0,0.2)] transition-all transform active:scale-[0.98]">
+                                    <Button className="w-full h-14 text-lg font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.2)] transition-all transform active:scale-[0.98]">
                                         {activeTab === 'lend' ? `Open Earn for ${symbol}` : `Open Borrow for ${symbol}`}
                                     </Button>
                                 </Link>

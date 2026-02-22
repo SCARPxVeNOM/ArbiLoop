@@ -31,7 +31,7 @@ export function Navbar() {
                             className="object-contain"
                         />
                     </div>
-                    <span className="font-outfit font-bold text-lg md:text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400 drop-shadow-sm">ArbiLoop</span>
+                    <span className="font-outfit font-bold text-lg md:text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 drop-shadow-sm">ArbiLoop</span>
                 </Link>
 
                 {/* Desktop Navigation */}
@@ -98,7 +98,7 @@ export function Navbar() {
                                             return (
                                                 <Button
                                                     onClick={openConnectModal}
-                                                    className="h-8 px-4 font-bold bg-[#CEFF00] text-black hover:bg-[#b8e600] rounded-full shadow-lg hover:shadow-[0_0_15px_rgba(206,255,0,0.4)] transition-all flex items-center gap-2 text-sm"
+                                                    className="h-8 px-4 font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-full shadow-lg hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all flex items-center gap-2 text-sm"
                                                 >
                                                     <Wallet className="w-3 h-3 md:w-4 md:h-4 mr-2" />
                                                     Connect Wallet
@@ -188,7 +188,7 @@ export function Navbar() {
                                     <Button
                                         size="sm"
                                         onClick={openConnectModal}
-                                        className="h-8 px-4 font-bold bg-[#CEFF00] text-black hover:bg-[#b8e600] rounded-full text-xs"
+                                        className="h-8 px-4 font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-full text-xs"
                                     >
                                         Connect
                                     </Button>
@@ -212,4 +212,5 @@ export function Navbar() {
         </nav>
     );
 }
+
 

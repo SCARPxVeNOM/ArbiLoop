@@ -13,17 +13,15 @@ export const metadata: Metadata = {
   description: 'Automated DeFi strategies on Arbitrum.',
   icons: {
     icon: [
-      { url: '/favicons/favicon.ico' },
-      { url: '/favicons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/ArbiLoop.png', type: 'image/png' },
     ],
     apple: [
-      { url: '/favicons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/ArbiLoop.png', sizes: '180x180', type: 'image/png' },
     ],
     other: [
       {
         rel: 'apple-touch-icon-precomposed',
-        url: '/favicons/apple-touch-icon.png',
+        url: '/ArbiLoop.png',
       },
     ],
   },

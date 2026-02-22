@@ -15,7 +15,7 @@ export function Markets() {
     const protocolConfig = useMemo(() => ({
         aaveV3: {
             label: getProtocolLabel('aave-v3'),
-            icon: getProtocolIcon('aave-v3') || '/aave.png',
+            icon: getProtocolIcon('aave-v3') || '/aave-logo.webp',
         },
         radiant: {
             label: getProtocolLabel('radiant-v2'),
@@ -161,7 +161,7 @@ export function Markets() {
                                                     BEST
                                                 </div>
                                             )}
-                                            <span className={`font-bold font-mono text-xs ${showBest ? 'text-yellow-400 scale-110 transition-transform' : 'text-emerald-400'}`}>
+                                            <span className={`font-bold font-mono text-xs ${showBest ? 'text-yellow-400 scale-110 transition-transform' : 'text-blue-400'}`}>
                                                 +{data.s.toFixed(2)}%
                                             </span>
                                             <span className="text-red-400/80 font-mono text-[10px]">
@@ -180,7 +180,7 @@ export function Markets() {
                                                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground mt-1">
                                                     <span>{targetChainName}</span>
                                                     <span className="w-1 h-1 rounded-full bg-border"></span>
-                                                    <span className="text-emerald-500/80">Deposited: {formatMoney(asset.totalSupplied)}</span>
+                                                    <span className="text-blue-500/80">Deposited: {formatMoney(asset.totalSupplied)}</span>
                                                     <span className="w-1 h-1 rounded-full bg-border"></span>
                                                     <span className="text-red-500/60">Loaned: {formatMoney(asset.totalBorrowed)}</span>
                                                 </div>
@@ -195,7 +195,7 @@ export function Markets() {
                                         <td className="p-4 align-middle text-right border-l border-border">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Link href={`/lend/earn?pool=${asset.symbol}`}>
-                                                    <Button size="sm" className="h-8 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all text-xs font-bold">
+                                                    <Button size="sm" className="h-8 bg-blue-500/10 text-blue-500 border border-blue-500/20 hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-all text-xs font-bold">
                                                         Deposit
                                                     </Button>
                                                 </Link>
@@ -225,7 +225,7 @@ export function Markets() {
                                             {label === protocolConfig.radiant.label && <img src={protocolConfig.radiant.icon} className="w-3 h-3 rounded-full" alt={protocolConfig.radiant.label} />}
                                             <span className="text-[10px] text-muted-foreground">{label}</span>
                                         </div>
-                                        <span className={`font-mono text-xs font-bold ${isBest && data.s >= 0.01 && availableProviders > 1 ? 'text-yellow-400' : 'text-emerald-400'}`}>
+                                        <span className={`font-mono text-xs font-bold ${isBest && data.s >= 0.01 && availableProviders > 1 ? 'text-yellow-400' : 'text-blue-400'}`}>
                                             +{data.s.toFixed(2)}%
                                         </span>
                                     </div>
@@ -244,7 +244,7 @@ export function Markets() {
                                         </div>
                                         <div className="text-right">
                                             <div className="text-xs text-muted-foreground">Total Supplied</div>
-                                            <div className="font-mono font-bold text-emerald-500">{formatMoney(asset.totalSupplied)}</div>
+                                            <div className="font-mono font-bold text-blue-500">{formatMoney(asset.totalSupplied)}</div>
                                         </div>
                                     </div>
 
@@ -255,7 +255,7 @@ export function Markets() {
 
                                     <div className="grid grid-cols-2 gap-3">
                                         <Link href={`/lend/earn?pool=${asset.symbol}`} className="w-full">
-                                            <Button size="sm" className="w-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white font-bold">
+                                            <Button size="sm" className="w-full bg-blue-500/10 text-blue-500 border border-blue-500/20 hover:bg-blue-500 hover:text-white font-bold">
                                                 Deposit
                                             </Button>
                                         </Link>
@@ -275,3 +275,4 @@ export function Markets() {
         </Card>
     );
 }
+

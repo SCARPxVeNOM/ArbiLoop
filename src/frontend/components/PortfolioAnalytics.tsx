@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useState } from 'react';
 import {
@@ -105,7 +105,7 @@ function actionIcon(action: ActivityAction) {
 }
 
 function statusClass(status: ActivityRecord['status']) {
-    if (status === 'confirmed') return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
+    if (status === 'confirmed') return 'text-blue-400 border-blue-500/30 bg-blue-500/10';
     if (status === 'failed') return 'text-red-400 border-red-500/30 bg-red-500/10';
     return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
 }
@@ -269,7 +269,7 @@ export function PortfolioAnalytics({
                                     className={cn(
                                         'h-8 rounded-md px-3 text-xs font-bold uppercase tracking-wide transition-colors',
                                         range === key
-                                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
                                             : 'bg-white/5 text-muted-foreground border border-white/10 hover:text-white'
                                     )}
                                 >
@@ -287,13 +287,13 @@ export function PortfolioAnalytics({
                         </div>
                         <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                             <div className="text-[10px] uppercase text-muted-foreground">Range PnL</div>
-                            <div className={cn('text-lg font-bold', pnlSummary.usd >= 0 ? 'text-emerald-400' : 'text-red-400')}>
+                            <div className={cn('text-lg font-bold', pnlSummary.usd >= 0 ? 'text-blue-400' : 'text-red-400')}>
                                 {pnlSummary.usd >= 0 ? '+' : ''}{formatMoney(pnlSummary.usd)}
                             </div>
                         </div>
                         <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                             <div className="text-[10px] uppercase text-muted-foreground">PnL %</div>
-                            <div className={cn('text-lg font-bold', pnlSummary.pct >= 0 ? 'text-emerald-400' : 'text-red-400')}>
+                            <div className={cn('text-lg font-bold', pnlSummary.pct >= 0 ? 'text-blue-400' : 'text-red-400')}>
                                 {pnlSummary.pct >= 0 ? '+' : ''}{pnlSummary.pct.toFixed(2)}%
                             </div>
                         </div>
@@ -301,7 +301,7 @@ export function PortfolioAnalytics({
                             <div className="text-[10px] uppercase text-muted-foreground">Health Factor</div>
                             <div className={cn(
                                 'text-lg font-bold',
-                                overallHealthFactor >= 1.5 ? 'text-emerald-400' : overallHealthFactor >= 1.2 ? 'text-amber-400' : 'text-red-400'
+                                overallHealthFactor >= 1.5 ? 'text-blue-400' : overallHealthFactor >= 1.2 ? 'text-amber-400' : 'text-red-400'
                             )}>
                                 {Number.isFinite(overallHealthFactor) ? overallHealthFactor.toFixed(2) : 'N/A'}
                             </div>
@@ -353,12 +353,12 @@ export function PortfolioAnalytics({
                     <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                             <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                                {isAtRisk ? <ShieldAlert className="h-4 w-4 text-red-400" /> : <RefreshCw className="h-4 w-4 text-emerald-400" />}
+                                {isAtRisk ? <ShieldAlert className="h-4 w-4 text-red-400" /> : <RefreshCw className="h-4 w-4 text-blue-400" />}
                                 <span>{isAtRisk ? 'Risk Elevated' : 'Risk Controls'}</span>
                             </div>
                             <span className={cn(
                                 'rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase',
-                                isAtRisk ? 'border-red-500/30 bg-red-500/10 text-red-400' : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+                                isAtRisk ? 'border-red-500/30 bg-red-500/10 text-red-400' : 'border-blue-500/30 bg-blue-500/10 text-blue-400'
                             )}>
                                 {isAtRisk ? 'Fix Risk Now' : 'Ready'}
                             </span>
@@ -427,7 +427,7 @@ export function PortfolioAnalytics({
                                                 {actionLabel(record.action)} {record.asset}
                                             </div>
                                             <div className="text-[11px] text-muted-foreground">
-                                                {protocolLabel} • {formatTimelineDate(record.createdAt)}
+                                                {protocolLabel} â€¢ {formatTimelineDate(record.createdAt)}
                                             </div>
                                         </div>
                                     </div>
@@ -461,3 +461,4 @@ export function PortfolioAnalytics({
         </div>
     );
 }
+

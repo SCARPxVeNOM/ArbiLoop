@@ -28,7 +28,7 @@ function HealthBadge({ health }: { health: ProtocolHealth }) {
     }
 
     const config = {
-        safe: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/30', label: 'Safe' },
+        safe: { bg: 'bg-blue-500/15', text: 'text-blue-400', border: 'border-blue-500/30', label: 'Safe' },
         warning: { bg: 'bg-amber-500/15', text: 'text-amber-400', border: 'border-amber-500/30', label: 'Warning' },
         danger: { bg: 'bg-red-500/15', text: 'text-red-400', border: 'border-red-500/30', label: 'Risk' },
         inactive: { bg: 'bg-muted/50', text: 'text-muted-foreground', border: 'border-muted', label: 'Inactive' },
@@ -36,7 +36,7 @@ function HealthBadge({ health }: { health: ProtocolHealth }) {
 
     return (
         <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${config.bg} ${config.text} ${config.border} inline-flex items-center gap-1`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${health.status === 'safe' ? 'bg-emerald-400' : health.status === 'warning' ? 'bg-amber-400' : 'bg-red-400'}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${health.status === 'safe' ? 'bg-blue-400' : health.status === 'warning' ? 'bg-amber-400' : 'bg-red-400'}`} />
             {config.label}
             {health.healthFactor > 0 && (
                 <span className="ml-0.5 opacity-70">{health.healthFactor.toFixed(2)}</span>
@@ -56,7 +56,7 @@ function CustomTooltip({ active, payload }: any) {
                     <span className="font-bold text-sm text-foreground">{data.name}</span>
                 </div>
                 <div className="text-xs space-y-0.5 text-muted-foreground">
-                    <div>Supply: <span className="text-emerald-400 font-mono">${data.supply?.toFixed(2) || '0.00'}</span></div>
+                    <div>Supply: <span className="text-blue-400 font-mono">${data.supply?.toFixed(2) || '0.00'}</span></div>
                     <div>Borrow: <span className="text-red-400 font-mono">${data.borrow?.toFixed(2) || '0.00'}</span></div>
                     <div>Net: <span className="text-foreground font-mono">${(data.value - (data.borrow || 0)).toFixed(2)}</span></div>
                     <div className="pt-1 border-t border-border mt-1">
@@ -151,7 +151,7 @@ export function Portfolio() {
         const anyWarning = activeProtocols.some(h => h.status === 'warning');
         if (anyDanger) return { text: 'At Risk', color: 'text-red-500 animate-pulse', icon: AlertTriangle };
         if (anyWarning) return { text: 'Caution', color: 'text-amber-400', icon: AlertTriangle };
-        return { text: 'Healthy', color: 'text-emerald-400', icon: ShieldCheck };
+        return { text: 'Healthy', color: 'text-blue-400', icon: ShieldCheck };
     };
     const overallStatus = getOverallStatus();
 
@@ -241,17 +241,17 @@ export function Portfolio() {
                                     </td>
                                     <td className="py-3 px-4 text-right font-mono leading-tight">
                                         {pos.apy > 0 && (
-                                            <div className="text-emerald-400 font-bold">+{pos.apy.toFixed(2)}%</div>
+                                            <div className="text-blue-400 font-bold">+{pos.apy.toFixed(2)}%</div>
                                         )}
                                         {pos.borrowApy > 0 && (
                                             <div className="text-red-400 font-bold">-{pos.borrowApy.toFixed(2)}%</div>
                                         )}
                                         {!(pos.apy > 0) && !(pos.borrowApy > 0) && (
-                                            <span className="text-muted-foreground/30">—</span>
+                                            <span className="text-muted-foreground/30">â€”</span>
                                         )}
                                     </td>
                                     <td className="py-3 px-4 text-center hidden md:table-cell">
-                                        <div className="text-emerald-500 font-bold">{pos.supply > 0 ? pos.supply.toFixed(4) : '-'}</div>
+                                        <div className="text-blue-500 font-bold">{pos.supply > 0 ? pos.supply.toFixed(4) : '-'}</div>
                                         {pos.supplyUSD > 0 && <div className="text-[10px] text-muted-foreground/60 font-mono">${pos.supplyUSD.toFixed(2)}</div>}
                                     </td>
                                     <td className="py-3 px-4 text-right hidden md:table-cell">
@@ -259,7 +259,7 @@ export function Portfolio() {
                                         {pos.borrowUSD > 0 && <div className="text-[10px] text-muted-foreground/60 font-mono">${pos.borrowUSD.toFixed(2)}</div>}
                                     </td>
                                     <td className="py-3 px-4 text-right font-mono text-muted-foreground hidden md:table-cell">
-                                        <span className={cn("font-bold", netUSD > 0 ? "text-emerald-500" : netUSD < 0 ? "text-red-500" : "")}>
+                                        <span className={cn("font-bold", netUSD > 0 ? "text-blue-500" : netUSD < 0 ? "text-red-500" : "")}>
                                             ${netUSD.toFixed(2)}
                                         </span>
                                     </td>
@@ -288,7 +288,7 @@ export function Portfolio() {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <div className={cn("text-xs font-black font-mono", netUSD > 0 ? "text-emerald-400" : netUSD < 0 ? "text-red-400" : "text-muted-foreground")}>
+                                        <div className={cn("text-xs font-black font-mono", netUSD > 0 ? "text-blue-400" : netUSD < 0 ? "text-red-400" : "text-muted-foreground")}>
                                             ${netUSD.toFixed(2)}
                                         </div>
                                         <div className="text-[9px] uppercase text-muted-foreground/40 font-black tracking-tighter">Net Value</div>
@@ -298,11 +298,11 @@ export function Portfolio() {
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="bg-white/[0.03] border border-white/5 rounded-xl p-2.5">
                                         <div className="flex justify-between items-center mb-1">
-                                            <span className="text-[9px] uppercase text-emerald-500/50 font-black tracking-widest">Supply</span>
-                                            {pos.apy > 0 && <span className="text-[10px] font-black text-emerald-400">+{pos.apy.toFixed(2)}%</span>}
+                                            <span className="text-[9px] uppercase text-blue-500/50 font-black tracking-widest">Supply</span>
+                                            {pos.apy > 0 && <span className="text-[10px] font-black text-blue-400">+{pos.apy.toFixed(2)}%</span>}
                                         </div>
                                         <div className="text-xs font-black text-white font-mono">
-                                            {pos.supply > 0 ? pos.supply.toFixed(4) : '—'}
+                                            {pos.supply > 0 ? pos.supply.toFixed(4) : 'â€”'}
                                         </div>
                                         {pos.supplyUSD > 0 && <div className="text-[9px] text-muted-foreground/40 font-bold">${pos.supplyUSD.toFixed(2)}</div>}
                                     </div>
@@ -313,7 +313,7 @@ export function Portfolio() {
                                             {pos.borrowApy > 0 && <span className="text-[10px] font-black text-red-400">-{pos.borrowApy.toFixed(2)}%</span>}
                                         </div>
                                         <div className="text-xs font-black text-white font-mono">
-                                            {pos.borrow > 0 ? pos.borrow.toFixed(4) : '—'}
+                                            {pos.borrow > 0 ? pos.borrow.toFixed(4) : 'â€”'}
                                         </div>
                                         {pos.borrowUSD > 0 && <div className="text-[9px] text-muted-foreground/40 font-bold">${pos.borrowUSD.toFixed(2)}</div>}
                                     </div>
@@ -327,7 +327,7 @@ export function Portfolio() {
     };
 
     const protocols = [
-        { id: 'aave', name: 'Aave V3', img: '/aave.png', supply: aaveSupply, borrow: aaveBorrow, health: aaveHealth, positions: aavePositions, utilization: aaveHealth.borrowPowerUSD > 0 ? (aaveHealth.debtUSD / aaveHealth.borrowPowerUSD) * 100 : 0, apy: aaveNetAPY },
+        { id: 'aave', name: 'Aave V3', img: '/aave-logo.webp', supply: aaveSupply, borrow: aaveBorrow, health: aaveHealth, positions: aavePositions, utilization: aaveHealth.borrowPowerUSD > 0 ? (aaveHealth.debtUSD / aaveHealth.borrowPowerUSD) * 100 : 0, apy: aaveNetAPY },
         { id: 'radiant', name: 'Radiant', img: '/radiant.jpeg', supply: radiantSupply, borrow: radiantBorrow, health: radiantHealth, positions: radiantPositions, utilization: radiantHealth.borrowPowerUSD > 0 ? (radiantHealth.debtUSD / radiantHealth.borrowPowerUSD) * 100 : 0, apy: radiantNetAPY },
     ];
 
@@ -335,7 +335,7 @@ export function Portfolio() {
         <div className="container pt-0 md:pt-8 pb-24 space-y-8 max-w-screen-2xl mx-auto px-0 md:px-16">
             <div className="flex items-center justify-between px-4 md:px-0">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-2 font-outfit bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400">
+                    <h1 className="text-3xl font-bold tracking-tight mb-2 font-outfit bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                         My Portfolio
                     </h1>
                     <div className="text-sm text-muted-foreground">Detailed breakdown of your DeFi positions across Arbitrum.</div>
@@ -353,8 +353,8 @@ export function Portfolio() {
                 <div className="group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 p-5 md:p-8 transition-all hover:bg-white/[0.04] shadow-2xl">
                     <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-5 md:mb-8">
-                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
-                                <span className="text-lg md:text-xl font-black text-emerald-500">$</span>
+                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                                <span className="text-lg md:text-xl font-black text-blue-500">$</span>
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-muted-foreground/40 leading-none">Net Worth</span>
@@ -365,12 +365,12 @@ export function Portfolio() {
                                 ${(totalNetWorth || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <div className="flex items-center gap-2 mt-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                 {healthData.isLoading && address ? (
                                     <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">Loading...</span>
                                 ) : (
                                     <div className="flex items-baseline gap-1.5">
-                                        <span className="text-sm font-black text-emerald-400 leading-none">
+                                        <span className="text-sm font-black text-blue-400 leading-none">
                                             {globalNetAPY > 0 ? '+' : ''}{globalNetAPY.toFixed(2)}%
                                         </span>
                                         <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">
@@ -387,19 +387,19 @@ export function Portfolio() {
                 <div className="group relative overflow-hidden rounded-[2rem] bg-[#0A0A0B] border border-white/10 p-5 md:p-8 transition-all hover:bg-white/[0.04] shadow-2xl">
                     <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-5 md:mb-8">
-                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-emerald-400/10 flex items-center justify-center border border-emerald-400/20 shrink-0">
-                                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
+                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-blue-400/10 flex items-center justify-center border border-blue-400/20 shrink-0">
+                                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-blue-400" />
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-muted-foreground/40 leading-none">Total Supplied</span>
                             </div>
                         </div>
                         <div>
-                            <div className="text-2xl md:text-5xl font-bold text-emerald-400 leading-none tracking-tight mb-2 md:mb-3">
+                            <div className="text-2xl md:text-5xl font-bold text-blue-400 leading-none tracking-tight mb-2 md:mb-3">
                                 ${!address ? '0.00' : healthData.isLoading ? '...' : totalSupplied.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
                                 <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">Collateral & Liquidity</span>
                             </div>
                         </div>
@@ -438,19 +438,19 @@ export function Portfolio() {
                     </div>
                     <div className="flex flex-col h-full justify-between">
                         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4 mb-5 md:mb-8">
-                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shrink-0">
-                                <span className="text-lg md:text-xl font-black text-emerald-500">$</span>
+                            <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+                                <span className="text-lg md:text-xl font-black text-blue-500">$</span>
                             </div>
                             <div className="flex flex-col min-w-0">
                                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-muted-foreground/40 leading-none">Est. Earnings</span>
                             </div>
                         </div>
                         <div>
-                            <div className="text-2xl md:text-5xl font-bold text-emerald-400 leading-none tracking-tight mb-2 md:mb-3">
+                            <div className="text-2xl md:text-5xl font-bold text-blue-400 leading-none tracking-tight mb-2 md:mb-3">
                                 ${!address ? '0.00' : healthData.isLoading ? '...' : (totalNetWorth * (globalNetAPY / 100)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                 <span className="text-[8px] md:text-[10px] font-bold text-muted-foreground/50 uppercase tracking-widest leading-none">Projected Annual Yield</span>
                             </div>
                         </div>
@@ -557,14 +557,14 @@ export function Portfolio() {
                                                 </td>
                                                 <td className="p-4 text-right font-mono">${proto.supply.toFixed(2)}</td>
                                                 <td className="p-4 text-right font-mono text-red-400">${proto.borrow.toFixed(2)}</td>
-                                                <td className="p-4 text-right font-mono text-emerald-400 font-bold">{proto.apy.toFixed(2)}%</td>
+                                                <td className="p-4 text-right font-mono text-blue-400 font-bold">{proto.apy.toFixed(2)}%</td>
                                                 <td className="p-4 min-w-[140px]">
                                                     <div className="flex flex-col gap-1.5 px-2">
                                                         <div className="flex justify-between items-center text-[10px] font-mono">
                                                             <span className="text-muted-foreground">Credit Used</span>
                                                             <span className={cn(
                                                                 "font-bold",
-                                                                proto.utilization > 90 ? "text-red-400" : proto.utilization > 70 ? "text-amber-400" : "text-emerald-400"
+                                                                proto.utilization > 90 ? "text-red-400" : proto.utilization > 70 ? "text-amber-400" : "text-blue-400"
                                                             )}>
                                                                 {proto.utilization.toFixed(1)}%
                                                             </span>
@@ -573,7 +573,7 @@ export function Portfolio() {
                                                             <motion.div
                                                                 className={cn(
                                                                     "h-full rounded-full transition-all duration-500",
-                                                                    proto.utilization > 90 ? "bg-red-500" : proto.utilization > 70 ? "bg-amber-500" : "bg-emerald-500"
+                                                                    proto.utilization > 90 ? "bg-red-500" : proto.utilization > 70 ? "bg-amber-500" : "bg-blue-500"
                                                                 )}
                                                                 initial={{ width: 0 }}
                                                                 animate={{ width: `${Math.min(100, proto.utilization)}%` }}
@@ -624,8 +624,8 @@ export function Portfolio() {
                                                         </div>
                                                         <div className="w-px h-6 bg-white/10" />
                                                         <div className="flex flex-col gap-0.5">
-                                                            <span className="text-emerald-500/50 text-[8px]">Net APY</span>
-                                                            <span className="text-emerald-400 text-xs">{proto.apy.toFixed(2)}%</span>
+                                                            <span className="text-blue-500/50 text-[8px]">Net APY</span>
+                                                            <span className="text-blue-400 text-xs">{proto.apy.toFixed(2)}%</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -639,7 +639,7 @@ export function Portfolio() {
                                         {/* Middle Section: Supply & Debt Grid */}
                                         <div className="grid grid-cols-2 gap-3">
                                             <div className="bg-white/[0.03] border border-white/5 rounded-xl p-3 flex flex-col gap-1">
-                                                <span className="text-[10px] uppercase text-emerald-500/50 font-black tracking-widest">Supply</span>
+                                                <span className="text-[10px] uppercase text-blue-500/50 font-black tracking-widest">Supply</span>
                                                 <span className="text-sm font-black text-white font-mono">${proto.supply.toFixed(2)}</span>
                                             </div>
                                             <div className="bg-white/[0.03] border border-white/5 rounded-xl p-3 flex flex-col gap-1">
@@ -654,7 +654,7 @@ export function Portfolio() {
                                                 <span className="text-muted-foreground/60 uppercase tracking-widest">Utilization</span>
                                                 <span className={cn(
                                                     "font-black tabular-nums tracking-tighter",
-                                                    proto.utilization > 90 ? "text-red-400" : proto.utilization > 70 ? "text-amber-400" : "text-emerald-400"
+                                                    proto.utilization > 90 ? "text-red-400" : proto.utilization > 70 ? "text-amber-400" : "text-blue-400"
                                                 )}>
                                                     {proto.utilization.toFixed(1)}%
                                                 </span>
@@ -663,7 +663,7 @@ export function Portfolio() {
                                                 <motion.div
                                                     className={cn(
                                                         "h-full rounded-full",
-                                                        proto.utilization > 90 ? "bg-red-500" : proto.utilization > 70 ? "bg-amber-500" : "bg-emerald-500"
+                                                        proto.utilization > 90 ? "bg-red-500" : proto.utilization > 70 ? "bg-amber-500" : "bg-blue-500"
                                                     )}
                                                     initial={{ width: 0 }}
                                                     animate={{ width: `${Math.min(100, proto.utilization)}%` }}
@@ -685,5 +685,6 @@ export function Portfolio() {
         </div>
     );
 }
+
 
 

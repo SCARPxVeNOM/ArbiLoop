@@ -13,11 +13,11 @@ export default function LandingPage() {
       {/* Background Gradients (Hidden on Mobile) */}
       <div className="fixed inset-0 pointer-events-none hidden md:block">
         {/* Top Right - Primary Lime Glow */}
-        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-[#CEFF00]/15 rounded-full blur-[120px]"></div>
+        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-[#3B82F6]/15 rounded-full blur-[120px]"></div>
         {/* Bottom Left - Emerald Glow (Safe Theme) */}
-        <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-emerald-500/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px]"></div>
         {/* Center Left - Subtle Lime/Emerald Mix for depth */}
-        <div className="absolute top-[30%] left-[-10%] w-[500px] h-[500px] bg-[#CEFF00]/5 rounded-full blur-[100px]"></div>
+        <div className="absolute top-[30%] left-[-10%] w-[500px] h-[500px] bg-[#3B82F6]/5 rounded-full blur-[100px]"></div>
       </div>
 
       <div className="relative z-10 pt-24 md:pt-32 pb-20">
@@ -26,17 +26,17 @@ export default function LandingPage() {
           {/* Hero Section */}
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-16 md:mb-32">
             <div className="space-y-8 animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#CEFF00]/10 border border-[#CEFF00]/20 text-[#CEFF00] text-xs md:text-sm font-bold tracking-wide">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/20 text-[#3B82F6] text-xs md:text-sm font-bold tracking-wide">
                 <span className="relative flex h-1.5 w-1.5 md:h-2 md:w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#CEFF00] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-[#CEFF00]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3B82F6] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-[#3B82F6]"></span>
                 </span>
                 Live on Arbitrum
               </div>
 
               <h1 className="text-4xl md:text-7xl font-bold font-outfit leading-[1.1]">
                 Your Personal <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#CEFF00] to-emerald-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] to-blue-400">
                   AI Risk Agent
                 </span>
               </h1>
@@ -98,7 +98,7 @@ export default function LandingPage() {
                     'Strategy planner to evaluate loop risk before execution'
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-3 font-bold text-white/80">
-                      <div className="h-6 w-6 rounded-full bg-[#CEFF00]/20 flex items-center justify-center text-[#CEFF00]">
+                      <div className="h-6 w-6 rounded-full bg-[#3B82F6]/20 flex items-center justify-center text-[#3B82F6]">
                         <Zap size={14} />
                       </div>
                       {item}
@@ -140,14 +140,14 @@ export default function LandingPage() {
                 {
                   title: 'AI Agent Monitoring',
                   desc: 'Our intelligent Telegram bot keeps a 24/7 watch on the blockchain and your portfolio, acting as your personal AI risk manager.',
-                  icon: <Bot className="text-[#CEFF00]" size={32} />,
-                  bg: 'bg-[#CEFF00]/5'
+                  icon: <Bot className="text-[#3B82F6]" size={32} />,
+                  bg: 'bg-[#3B82F6]/5'
                 },
                 {
                   title: 'Real-Time Analytics',
                   desc: 'Track your Net Worth, APY, and Health Factor across all protocols in one unified dashboard.',
-                  icon: <BarChart3 className="text-emerald-400" size={32} />,
-                  bg: 'bg-emerald-400/5'
+                  icon: <BarChart3 className="text-blue-400" size={32} />,
+                  bg: 'bg-blue-400/5'
                 },
                 {
                   title: 'Non-Custodial Security',
@@ -168,7 +168,7 @@ export default function LandingPage() {
           </div>
 
           {/* Steps Section */}
-          <div className="py-20 bg-gradient-to-b from-transparent to-[#CEFF00]/5 rounded-[3rem] border border-white/5 relative overflow-hidden">
+          <div className="py-20 bg-gradient-to-b from-transparent to-[#3B82F6]/5 rounded-[3rem] border border-white/5 relative overflow-hidden">
             <div className="absolute inset-0 bg-[#0B0B0F]/80 backdrop-blur-sm -z-10"></div>
             <div className="container max-w-4xl mx-auto px-8">
               <h2 className="text-4xl font-bold font-outfit text-center mb-16">
@@ -177,7 +177,7 @@ export default function LandingPage() {
 
               <div className="space-y-12 relative">
                 {/* Line */}
-                <div className="absolute left-[27px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-[#CEFF00] to-transparent md:hidden"></div>
+                <div className="absolute left-[27px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-[#3B82F6] to-transparent md:hidden"></div>
 
                 {[
                   { step: '01', title: 'Connect Wallet', desc: 'Link your MetaMask, TrustWallet, or any Web3 wallet securely.' },
@@ -185,7 +185,7 @@ export default function LandingPage() {
                   { step: '03', title: 'Monitor & Manage', desc: 'Track positions across Aave and Radiant. Take action when needed.' }
                 ].map((s, i) => (
                   <div key={i} className="flex gap-8 items-start relative">
-                    <div className="h-14 w-14 shrink-0 rounded-full bg-[#CEFF00] text-black font-bold text-xl flex items-center justify-center shadow-[0_0_15px_rgba(206,255,0,0.5)] z-10">
+                    <div className="h-14 w-14 shrink-0 rounded-full bg-[#3B82F6] text-white font-bold text-xl flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)] z-10">
                       {s.step}
                     </div>
                     <div className="pt-2">
@@ -202,7 +202,7 @@ export default function LandingPage() {
           <div className="py-16 md:py-32 text-center">
             <h2 className="text-5xl font-bold font-outfit mb-8">Ready to Optimize?</h2>
             <Link href="/dashboard">
-              <Button className="h-16 px-12 text-xl font-bold bg-[#CEFF00] text-black hover:bg-[#b8e600] rounded-full shadow-[0_0_30px_rgba(206,255,0,0.4)] transition-all hover:scale-105">
+              <Button className="h-16 px-12 text-xl font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-full shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all hover:scale-105">
                 Launch ArbiLoop <ArrowRight className="ml-2" />
               </Button>
             </Link>
@@ -213,4 +213,5 @@ export default function LandingPage() {
     </main>
   );
 }
+
 

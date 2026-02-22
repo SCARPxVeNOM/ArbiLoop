@@ -6,7 +6,7 @@ export interface ProtocolMeta {
 }
 
 const ARBITRUM_PROTOCOLS: ProtocolMeta[] = [
-    { id: 'aave-v3', label: 'Aave V3', icon: '/aave.png', sourceProjects: ['aave-v3'] },
+    { id: 'aave-v3', label: 'Aave V3', icon: '/aave-logo.webp', sourceProjects: ['aave-v3'] },
     { id: 'radiant-v2', label: 'Radiant', icon: '/radiant.jpeg', sourceProjects: ['radiant-v2'] },
 ];
 

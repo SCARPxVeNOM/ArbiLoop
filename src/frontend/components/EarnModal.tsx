@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -340,7 +340,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                                     <div className="flex items-center gap-2 text-[10px] md:text-xs text-muted-foreground">
                                         <span className="uppercase">{protocolDisplay}</span>
                                         <span className="w-1 h-1 bg-white/20 rounded-full" />
-                                        <span className="text-emerald-400 font-medium">Earn Market</span>
+                                        <span className="text-blue-400 font-medium">Earn Market</span>
                                     </div>
                                 </div>
                             </div>
@@ -372,7 +372,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                             <div className="flex items-center gap-3">
                                 <div className="hidden sm:flex flex-col text-right">
                                     <span className="text-[9px] uppercase text-muted-foreground/30 font-black tracking-widest">Yield APY</span>
-                                    <span className="text-emerald-400 font-black font-mono text-xs">+{pool.apy.toFixed(2)}%</span>
+                                    <span className="text-blue-400 font-black font-mono text-xs">+{pool.apy.toFixed(2)}%</span>
                                 </div>
                                 <motion.div
                                     animate={{ rotate: isStatsExpanded ? 180 : 0 }}
@@ -403,7 +403,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                                                 <div className="text-[9px] md:text-[10px] uppercase text-muted-foreground/30 font-black tracking-tighter mb-1.5">Health</div>
                                                 <div className={cn("px-2 py-0.5 rounded-full border text-[10px] md:text-xs font-black uppercase italic",
                                                     activeHealth.healthFactor > 1.5
-                                                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
+                                                        ? "bg-blue-500/10 border-blue-500/20 text-blue-500"
                                                         : activeHealth.healthFactor > 1.1
                                                             ? "bg-amber-500/10 border-amber-500/20 text-amber-400"
                                                             : "bg-red-500/10 border-red-500/20 text-red-400"
@@ -444,7 +444,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                             <span className="text-[10px] md:text-xs uppercase text-muted-foreground/60 font-black tracking-widest italic">{activeTab === 'deposit' ? 'Supply' : 'Withdraw'}</span>
                             <div className="flex gap-1.5">
                                 {activeTab === 'withdraw' && (
-                                    <button onClick={() => setAmount(toPlainString(maxSafe))} className="text-[9px] md:text-[10px] text-emerald-400 font-black italic border border-emerald-400/20 px-2 py-1 rounded-md hover:bg-emerald-400/10 transition-colors uppercase tracking-tighter bg-emerald-400/5">Safe Max</button>
+                                    <button onClick={() => setAmount(toPlainString(maxSafe))} className="text-[9px] md:text-[10px] text-blue-400 font-black italic border border-blue-400/20 px-2 py-1 rounded-md hover:bg-blue-400/10 transition-colors uppercase tracking-tighter bg-blue-400/5">Safe Max</button>
                                 )}
                                 <button className="text-[9px] md:text-[10px] bg-white/5 hover:bg-white/10 px-2 py-1 rounded-md transition-all font-black uppercase text-muted-foreground/60 hover:text-white border border-white/10" onClick={setHalf}>Half</button>
                                 <button className="text-[9px] md:text-[10px] bg-white/5 hover:bg-white/10 px-2 py-1 rounded-md transition-all font-black uppercase text-muted-foreground/60 hover:text-white border border-white/10" onClick={setMax}>Max</button>
@@ -468,7 +468,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                                 {activeTab === 'deposit' ? 'Balance' : 'Available'}
                                 <span className="text-white/60 font-black ml-1.5 not-italic">{formatSmallNumber(activeTab === 'deposit' ? walletBalance : maxWithdrawableAvailable)}</span>
                             </div>
-                            <div className="text-muted-foreground/30 font-black italic">≈ {formatMoney(amountNum * tokenPrice)}</div>
+                            <div className="text-muted-foreground/30 font-black italic">â‰ˆ {formatMoney(amountNum * tokenPrice)}</div>
                         </div>
                     </div>
 
@@ -490,17 +490,17 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                         <span className="text-[10px] md:text-xs text-muted-foreground font-medium">{activeTab === 'deposit' ? 'Collateral Buffer' : 'Health Factor'}</span>
                         {activeTab === 'deposit' ? (
                             <div className="flex items-center gap-2">
-                                <span className="text-xs md:text-sm font-bold text-[#CEFF00]">{((pool.ltv || 0) * 100).toFixed(0)}% LTV</span>
+                                <span className="text-xs md:text-sm font-bold text-[#3B82F6]">{((pool.ltv || 0) * 100).toFixed(0)}% LTV</span>
                                 {(parseFloat(amount) || 0) > 0 && (<><ArrowRight className="w-2.5 h-2.5 md:w-3 md:h-3 text-muted-foreground/30" /><span className="text-[10px] md:text-xs font-bold text-white/60">HF: {newHF > 5 ? '> 5.0' : newHF.toFixed(2)}</span></>)}
                             </div>
                         ) : (
-                            <div className="flex items-center gap-2"><span className="text-[10px] md:text-xs font-bold text-white/40">{(activeHealth.healthFactor || 10) > 5 ? '5.0' : activeHealth.healthFactor.toFixed(2)}</span><ArrowRight className="w-2.5 h-2.5 md:w-3 md:h-3 text-muted-foreground/30" /><span className={cn("text-xs md:text-sm font-bold", newHF < 1.1 ? "text-red-400" : newHF < 1.5 ? "text-amber-400" : "text-[#CEFF00]")}>{newHF > 5 ? '> 5.0' : (newHF || 0).toFixed(2)}</span></div>
+                            <div className="flex items-center gap-2"><span className="text-[10px] md:text-xs font-bold text-white/40">{(activeHealth.healthFactor || 10) > 5 ? '5.0' : activeHealth.healthFactor.toFixed(2)}</span><ArrowRight className="w-2.5 h-2.5 md:w-3 md:h-3 text-muted-foreground/30" /><span className={cn("text-xs md:text-sm font-bold", newHF < 1.1 ? "text-red-400" : newHF < 1.5 ? "text-amber-400" : "text-[#3B82F6]")}>{newHF > 5 ? '> 5.0' : (newHF || 0).toFixed(2)}</span></div>
                         )}
                     </div>
                     {((activeTab === 'withdraw' && withdrawUSD > 0) || (activeTab === 'deposit' && (parseFloat(amount) || 0) > 0)) && (
-                        <div className="relative h-1 w-full bg-white/5 rounded-full overflow-hidden"><motion.div className={cn("h-full bg-gradient-to-r", activeTab === 'deposit' ? "from-emerald-600 to-[#CEFF00]" : (newHF < 1.1 ? "from-red-500 to-orange-500" : "from-[#CEFF00] to-emerald-400"))} initial={{ width: 0 }} animate={{ width: activeTab === 'deposit' ? '100%' : `${Math.min(100, (1 / (newHF || 1)) * 100)}%` }} transition={{ duration: 0.5 }} /></div>
+                        <div className="relative h-1 w-full bg-white/5 rounded-full overflow-hidden"><motion.div className={cn("h-full bg-gradient-to-r", activeTab === 'deposit' ? "from-blue-600 to-[#3B82F6]" : (newHF < 1.1 ? "from-red-500 to-orange-500" : "from-[#3B82F6] to-blue-400"))} initial={{ width: 0 }} animate={{ width: activeTab === 'deposit' ? '100%' : `${Math.min(100, (1 / (newHF || 1)) * 100)}%` }} transition={{ duration: 0.5 }} /></div>
                     )}
-                    <div className="flex justify-between w-full text-[10px] md:text-xs items-center pt-1 border-t border-white/5"><span className="text-muted-foreground">Earning APY</span><span className="text-emerald-400 font-mono font-bold">{pool.apy.toFixed(2)}%</span></div>
+                    <div className="flex justify-between w-full text-[10px] md:text-xs items-center pt-1 border-t border-white/5"><span className="text-muted-foreground">Earning APY</span><span className="text-blue-400 font-mono font-bold">{pool.apy.toFixed(2)}%</span></div>
                 </div>
 
                 {isRisky && activeTab === 'withdraw' && (
@@ -514,9 +514,9 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                     onClick={handleAction}
                     disabled={isButtonDisabled}
                     className={`w-full h-14 md:h-16 text-xl md:text-2xl font-black rounded-2xl md:rounded-3xl transition-all relative overflow-hidden group/btn ${step === 'success'
-                        ? 'bg-emerald-500 hover:bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.4)]'
+                        ? 'bg-blue-500 hover:bg-blue-500 shadow-[0_0_30px_rgba(16,185,129,0.4)]'
                         : activeTab === 'deposit'
-                            ? 'bg-emerald-500 hover:bg-emerald-400 text-black shadow-[0_10px_40px_rgba(16,185,129,0.2)]'
+                            ? 'bg-blue-500 hover:bg-blue-400 text-black shadow-[0_10px_40px_rgba(16,185,129,0.2)]'
                             : 'bg-white hover:bg-gray-200 text-black shadow-[0_10px_40px_rgba(255,255,255,0.1)]'
                         }`}
                 >
@@ -535,7 +535,7 @@ export function EarnModalContent({ onClose, pool, isEmbedded = false, initialTab
                         )}
                         {step === 'approving' && (<motion.div key="approving" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3"><Loader2 className="w-6 h-6 animate-spin" /><span className="uppercase italic">Permissioning...</span></motion.div>)}
                         {step === 'mining' && (<motion.div key="mining" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3"><Loader2 className="w-6 h-6 animate-spin" /><span className="uppercase italic">Broadcasting...</span></motion.div>)}
-                        {step === 'success' && (<motion.div key="success" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-3 text-white uppercase italic"><div className="bg-white text-emerald-500 rounded-full p-1"><Check className="w-5 h-5 stroke-[4]" /></div><span>Complete</span></motion.div>)}
+                        {step === 'success' && (<motion.div key="success" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-3 text-white uppercase italic"><div className="bg-white text-blue-500 rounded-full p-1"><Check className="w-5 h-5 stroke-[4]" /></div><span>Complete</span></motion.div>)}
                     </AnimatePresence>
                 </Button>
             </div>
@@ -553,3 +553,4 @@ export function EarnModal({ isOpen, onClose, pool }: EarnModalProps) {
         </Dialog>
     );
 }
+

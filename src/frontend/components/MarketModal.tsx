@@ -55,7 +55,7 @@ export function MarketModal({ isOpen, onClose, initialMode, pool, initialTab }: 
                                     pool.project === 'aave-v3' ? "bg-[#F0B90B]" : "bg-[#A855F7]"
                                 )}>
                                     <img
-                                        src={pool.project === 'aave-v3' ? '/aave.png' : '/radiant.jpeg'}
+                                        src={pool.project === 'aave-v3' ? '/aave-logo.webp' : '/radiant.jpeg'}
                                         className="w-full h-full object-contain rounded-full"
                                         alt={protocolDisplay}
                                     />
@@ -77,7 +77,7 @@ export function MarketModal({ isOpen, onClose, initialMode, pool, initialTab }: 
                                     className={cn(
                                         "px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black transition-all lowercase italic",
                                         mode === "earn"
-                                            ? "bg-emerald-500 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                                            ? "bg-blue-500 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)]"
                                             : "text-muted-foreground hover:text-white"
                                     )}
                                 >
@@ -147,3 +147,4 @@ export function MarketModal({ isOpen, onClose, initialMode, pool, initialTab }: 
         </Dialog>
     );
 }
+

@@ -140,7 +140,7 @@ export default function Settings() {
             {!isConnected && (
                 <div className="flex z-10 flex-col items-center justify-center p-12 text-center glass-card rounded-2xl relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
-                    <ShieldCheck className="w-16 h-16 text-primary/80 mb-6 drop-shadow-[0_0_15px_rgba(206,255,0,0.3)]" />
+                    <ShieldCheck className="w-16 h-16 text-primary/80 mb-6 drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" />
                     <h3 className="text-2xl font-bold font-outfit mb-3">Connect Wallet</h3>
                     <p className="text-muted-foreground mb-8 max-w-md mx-auto">
                         Please connect your wallet securely to view your personalized dashboard and configure alerts.
@@ -151,7 +151,7 @@ export default function Settings() {
                             return (
                                 <Button
                                     onClick={openConnectModal}
-                                    className="h-12 px-8 text-lg font-bold bg-[#CEFF00] text-black hover:bg-[#b8e600] rounded-full shadow-[0_0_20px_rgba(206,255,0,0.3)] transition-all hover:scale-105 flex items-center gap-2"
+                                    className="h-12 px-8 text-lg font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-full shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all hover:scale-105 flex items-center gap-2"
                                 >
                                     Connect Wallet <Wallet className="h-5 w-5" />
                                 </Button>
@@ -163,7 +163,7 @@ export default function Settings() {
 
             {isConnected && (
                 <>
-                    <h1 className="text-3xl font-bold font-outfit bg-clip-text text-transparent bg-gradient-to-r from-primary to-emerald-400">
+                    <h1 className="text-3xl font-bold font-outfit bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400">
                         Settings & Alerts
                     </h1>
 
@@ -177,7 +177,7 @@ export default function Settings() {
                                         Telegram Link
                                     </div>
                                     {isLinked === true && (
-                                        <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                                        <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
                                             Linked to @{maskUsername(linkedUser?.username)}
                                         </Badge>
                                     )}
@@ -207,7 +207,7 @@ export default function Settings() {
                                         </div>
                                         <div className="flex justify-between items-center text-sm">
                                             <span className="text-muted-foreground">Alerts Status</span>
-                                            <span className={linkedUser?.alerts_enabled ? "text-emerald-400 font-bold" : "text-amber-500 font-bold"}>
+                                            <span className={linkedUser?.alerts_enabled ? "text-blue-400 font-bold" : "text-amber-500 font-bold"}>
                                                 {linkedUser?.alerts_enabled ? "Active" : "Paused"}
                                             </span>
                                         </div>
@@ -277,13 +277,13 @@ export default function Settings() {
                                         {/* Step 3: Copy & Verify */}
                                         {signature && (
                                             <div className="p-3 rounded-lg bg-secondary/30 border border-border animate-in zoom-in-95">
-                                                <label className="text-[10px] font-bold uppercase tracking-wider mb-2 block text-emerald-400">3. Final Step</label>
+                                                <label className="text-[10px] font-bold uppercase tracking-wider mb-2 block text-blue-400">3. Final Step</label>
                                                 <div className="flex items-center gap-2 p-2 bg-background/50 rounded border border-border">
                                                     <code className="text-[10px] flex-1 break-all truncate font-mono text-muted-foreground">
                                                         /verify {signature.substring(0, 15)}...
                                                     </code>
                                                     <Button size="icon" variant="ghost" className="h-6 w-6" onClick={copySignature}>
-                                                        {isCopied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                                                        {isCopied ? <Check size={14} className="text-blue-500" /> : <Copy size={14} />}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -360,7 +360,7 @@ export default function Settings() {
                                             <span className="text-xs text-muted-foreground">Liquidation Alerts</span>
                                             <div className="flex items-center gap-2">
                                                 {linkedUser?.alerts_enabled
-                                                    ? <><Check className="w-4 h-4 text-emerald-500" /><span className="text-sm font-bold text-emerald-500">Active</span></>
+                                                    ? <><Check className="w-4 h-4 text-blue-500" /><span className="text-sm font-bold text-blue-500">Active</span></>
                                                     : <><span className="text-sm font-bold text-muted-foreground">Disabled</span></>
                                                 }
                                             </div>
@@ -369,7 +369,7 @@ export default function Settings() {
                                             <span className="text-xs text-muted-foreground">Daily Briefing</span>
                                             <div className="flex items-center gap-2">
                                                 {linkedUser?.daily_updates_enabled
-                                                    ? <><Check className="w-4 h-4 text-emerald-500" /><span className="text-sm font-bold text-emerald-500">Active</span></>
+                                                    ? <><Check className="w-4 h-4 text-blue-500" /><span className="text-sm font-bold text-blue-500">Active</span></>
                                                     : <><span className="text-sm font-bold text-muted-foreground">Disabled</span></>
                                                 }
                                             </div>
@@ -390,7 +390,7 @@ export default function Settings() {
                         <Card className="glass-card border-primary/20">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
-                                    <ShieldCheck className="text-emerald-500" />
+                                    <ShieldCheck className="text-blue-500" />
                                     How It Works
                                 </CardTitle>
                             </CardHeader>
@@ -406,7 +406,7 @@ export default function Settings() {
                                 </p>
                                 <div className="mt-4 p-3 rounded-lg bg-primary/10 border border-primary/20">
                                     <p className="text-xs">
-                                        🔒 <strong>Security:</strong> We never ask for private keys. All on-chain transactions must be signed by your wallet.
+                                        ðŸ”’ <strong>Security:</strong> We never ask for private keys. All on-chain transactions must be signed by your wallet.
                                     </p>
                                 </div>
                             </CardContent>
@@ -417,4 +417,5 @@ export default function Settings() {
         </div>
     );
 }
+
 

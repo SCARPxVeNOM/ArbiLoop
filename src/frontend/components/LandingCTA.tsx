@@ -42,7 +42,7 @@ export function LandingCTA() {
                                     return (
                                         <Button
                                             onClick={openConnectModal}
-                                            className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg font-bold bg-[#CEFF00] text-black hover:bg-[#b8e600] rounded-full shadow-[0_0_20px_rgba(206,255,0,0.3)] transition-all hover:scale-105 w-full sm:w-auto flex items-center gap-2"
+                                            className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-full shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all hover:scale-105 w-full sm:w-auto flex items-center gap-2"
                                         >
                                             Connect Wallet <Wallet className="h-4 w-4 md:h-5 md:w-5" />
                                         </Button>
@@ -64,11 +64,11 @@ export function LandingCTA() {
                                 return (
                                     <div className="flex flex-col sm:flex-row gap-4">
                                         <Link href="/dashboard">
-                                            <Button className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg font-bold bg-[#CEFF00] text-black hover:bg-[#b8e600] rounded-full shadow-[0_0_20px_rgba(206,255,0,0.3)] transition-all hover:scale-105 w-full sm:w-auto">
+                                            <Button className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] rounded-full shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all hover:scale-105 w-full sm:w-auto">
                                                 Launch App
                                             </Button>
                                         </Link>
-                                        <Link href="/strategy">
+                                        <Link href="/lend/strategy">
                                             <Button variant="outline" className="h-12 md:h-14 px-6 md:px-8 text-base md:text-lg font-bold border-white/10 hover:bg-white/5 rounded-full text-white w-full sm:w-auto">
                                                 View Strategies
                                             </Button>
@@ -83,3 +83,4 @@ export function LandingCTA() {
         </div>
     );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, useRef } from 'react';
 import { Sparkles, Loader2, RefreshCw } from 'lucide-react';
@@ -169,10 +169,10 @@ export function AIInsights({ portfolioData, isLoading: isParentLoading }: AIInsi
             <Card className="bg-[#0A0A0B] border-white/10 shadow-2xl relative overflow-hidden group min-h-[300px] flex flex-col items-center justify-center">
                 {/* Background Glow Effects */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-[120px] pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-1000" />
-                <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none" />
 
                 <CardContent className="relative z-10 py-12 flex flex-col items-center text-center space-y-8 max-w-md mx-auto">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-emerald-500/10 flex items-center justify-center border border-white/10 shadow-2xl rotate-3 group-hover:rotate-6 transition-transform duration-500">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-blue-500/10 flex items-center justify-center border border-white/10 shadow-2xl rotate-3 group-hover:rotate-6 transition-transform duration-500">
                         <Sparkles className="w-8 h-8 text-primary animate-pulse" />
                     </div>
 
@@ -193,7 +193,7 @@ export function AIInsights({ portfolioData, isLoading: isParentLoading }: AIInsi
                                 <Button
                                     onClick={openConnectModal}
                                     size="lg"
-                                    className="bg-primary text-black font-bold h-12 px-8 rounded-full shadow-[0_0_20px_rgba(206,255,0,0.2)] hover:shadow-[0_0_30px_rgba(206,255,0,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+                                    className="bg-primary text-black font-bold h-12 px-8 rounded-full shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
                                 >
                                     <Wallet className="w-5 h-5" />
                                     Connect Wallet
@@ -207,14 +207,14 @@ export function AIInsights({ portfolioData, isLoading: isParentLoading }: AIInsi
     }
 
     return (
-        <Card className="bg-gradient-to-br from-[#CEFF00]/10 to-emerald-500/10 border-emerald-500/20 shadow-lg relative overflow-hidden">
+        <Card className="bg-gradient-to-br from-[#3B82F6]/10 to-blue-500/10 border-blue-500/20 shadow-lg relative overflow-hidden">
             <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="flex items-center gap-2 text-lg font-outfit text-emerald-400">
-                    <Sparkles className="w-5 h-5 text-[#CEFF00]" />
+                <CardTitle className="flex items-center gap-2 text-lg font-outfit text-blue-400">
+                    <Sparkles className="w-5 h-5 text-[#3B82F6]" />
                     AI Risk Agent Insights
                 </CardTitle>
                 {tips.length > 0 && !loading && (
-                    <button onClick={handleRefresh} className="text-xs text-emerald-500/50 hover:text-[#CEFF00] transition-colors" title="Force Refresh">
+                    <button onClick={handleRefresh} className="text-xs text-blue-500/50 hover:text-[#3B82F6] transition-colors" title="Force Refresh">
                         <RefreshCw className="w-4 h-4" />
                     </button>
                 )}
@@ -223,7 +223,7 @@ export function AIInsights({ portfolioData, isLoading: isParentLoading }: AIInsi
                 {loading || isParentLoading ? (
                     <div className="space-y-3 py-2">
                         <div className="flex items-center gap-3 text-muted-foreground mb-4">
-                            <Loader2 className="w-4 h-4 animate-spin text-[#CEFF00]" />
+                            <Loader2 className="w-4 h-4 animate-spin text-[#3B82F6]" />
                             <div className="overflow-hidden h-4">
                                 <span
                                     key={messageIndex}
@@ -248,8 +248,8 @@ export function AIInsights({ portfolioData, isLoading: isParentLoading }: AIInsi
                 ) : tips.length > 0 ? (
                     <ul className="space-y-3">
                         {tips.map((tip, i) => (
-                            <li key={i} className="flex gap-3 text-sm text-white/90 bg-black/20 p-3 rounded-lg border border-white/5 hover:border-[#CEFF00]/30 transition-colors">
-                                <span className="text-[#CEFF00] font-bold min-w-[20px]">0{i + 1}</span>
+                            <li key={i} className="flex gap-3 text-sm text-white/90 bg-black/20 p-3 rounded-lg border border-white/5 hover:border-[#3B82F6]/30 transition-colors">
+                                <span className="text-[#3B82F6] font-bold min-w-[20px]">0{i + 1}</span>
                                 <span className="leading-relaxed">{tip}</span>
                             </li>
                         ))}
@@ -263,4 +263,5 @@ export function AIInsights({ portfolioData, isLoading: isParentLoading }: AIInsi
         </Card>
     );
 }
+
 

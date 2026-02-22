@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -298,7 +298,7 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false, initialT
                             <div className="flex items-center gap-3">
                                 <div className="hidden sm:flex flex-col text-right">
                                     <span className="text-[9px] uppercase text-muted-foreground/30 font-black tracking-widest">Health Factor</span>
-                                    <span className={cn("text-xs font-black italic", borrowedAmount > 0 ? "text-amber-400" : "text-emerald-400")}>
+                                    <span className={cn("text-xs font-black italic", borrowedAmount > 0 ? "text-amber-400" : "text-blue-400")}>
                                         {borrowedAmount > 0 ? 'MONITOR' : 'SAFE'}
                                     </span>
                                 </div>
@@ -329,7 +329,7 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false, initialT
                                             </div>
                                             <div className="text-right flex flex-col items-end justify-center">
                                                 <div className="text-[9px] md:text-[10px] uppercase text-muted-foreground/30 font-black tracking-tighter mb-1.5">Raw Health</div>
-                                                <span className={cn("text-sm font-black font-mono", currentHF < 1.1 ? "text-red-400" : currentHF < 1.5 ? "text-amber-400" : "text-emerald-400")}>
+                                                <span className={cn("text-sm font-black font-mono", currentHF < 1.1 ? "text-red-400" : currentHF < 1.5 ? "text-amber-400" : "text-blue-400")}>
                                                     {currentHF.toFixed(2)}
                                                 </span>
                                             </div>
@@ -390,16 +390,16 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false, initialT
                                 {activeTab === 'repay' ? 'Wallet' : 'Available'}
                                 <span className="text-white/60 font-black ml-1.5 not-italic">{formatSmallNumber(activeTab === 'repay' ? walletBalance : availableLiquidity / (tokenPrice || 1))}</span>
                             </div>
-                            <div className="text-muted-foreground/30 font-black italic">≈ {formatMoney(parseFloat(amount || '0') * tokenPrice)}</div>
+                            <div className="text-muted-foreground/30 font-black italic">â‰ˆ {formatMoney(parseFloat(amount || '0') * tokenPrice)}</div>
                         </div>
                     </div>
                 </div>
 
                 <div className="bg-[#121216] border border-white/5 rounded-2xl p-3 md:p-4 space-y-2 md:space-y-3 mb-4 mx-4 md:mx-6">
                     <div className="flex justify-between items-center text-[9px] md:text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60"><span>Transaction Impact</span></div>
-                    <div className="flex justify-between items-center w-full"><span className="text-[10px] md:text-xs text-muted-foreground font-medium">Health Factor</span><div className="flex items-center gap-2"><span className="text-[10px] md:text-xs font-bold text-white/40">{(currentHF > 5 ? 5.0 : currentHF).toFixed(2)}</span><ArrowRight className="w-2.5 h-2.5 md:w-3 md:h-3 text-muted-foreground/30" /><span className={cn("text-xs md:text-sm font-bold", newHF < 1.1 ? "text-red-400" : newHF < 1.5 ? "text-amber-400" : "text-[#CEFF00]")}>{newHF > 5 ? '> 5.0' : (newHF || 0).toFixed(2)}</span></div></div>
+                    <div className="flex justify-between items-center w-full"><span className="text-[10px] md:text-xs text-muted-foreground font-medium">Health Factor</span><div className="flex items-center gap-2"><span className="text-[10px] md:text-xs font-bold text-white/40">{(currentHF > 5 ? 5.0 : currentHF).toFixed(2)}</span><ArrowRight className="w-2.5 h-2.5 md:w-3 md:h-3 text-muted-foreground/30" /><span className={cn("text-xs md:text-sm font-bold", newHF < 1.1 ? "text-red-400" : newHF < 1.5 ? "text-amber-400" : "text-[#3B82F6]")}>{newHF > 5 ? '> 5.0' : (newHF || 0).toFixed(2)}</span></div></div>
                     {(amountUSD > 0) && (
-                        <div className="relative h-1 w-full bg-white/5 rounded-full overflow-hidden"><motion.div className={cn("h-full bg-gradient-to-r", newHF < 1.1 ? "from-red-500 to-orange-500" : "from-[#CEFF00] to-emerald-400")} initial={{ width: 0 }} animate={{ width: `${Math.min(100, (1 / (newHF || 1)) * 100)}%` }} transition={{ duration: 0.5 }} /></div>
+                        <div className="relative h-1 w-full bg-white/5 rounded-full overflow-hidden"><motion.div className={cn("h-full bg-gradient-to-r", newHF < 1.1 ? "from-red-500 to-orange-500" : "from-[#3B82F6] to-blue-400")} initial={{ width: 0 }} animate={{ width: `${Math.min(100, (1 / (newHF || 1)) * 100)}%` }} transition={{ duration: 0.5 }} /></div>
                     )}
                     <div className="flex justify-between w-full text-[10px] md:text-xs items-center pt-1 border-t border-white/5"><span className="text-muted-foreground">Borrow APY</span><span className="text-red-400 font-mono font-bold">-{borrowApy.toFixed(2)}%</span></div>
                 </div>
@@ -413,7 +413,7 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false, initialT
                     onClick={handleAction}
                     disabled={isButtonDisabled}
                     className={`w-full h-14 md:h-16 text-xl md:text-2xl font-black rounded-2xl md:rounded-3xl transition-all relative overflow-hidden group/btn ${step === 'success'
-                        ? 'bg-emerald-500 hover:bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.4)]'
+                        ? 'bg-blue-500 hover:bg-blue-500 shadow-[0_0_30px_rgba(16,185,129,0.4)]'
                         : activeTab === 'borrow'
                             ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-[0_10px_40px_rgba(37,99,235,0.2)]'
                             : 'bg-white hover:bg-gray-200 text-black shadow-[0_10px_40px_rgba(255,255,255,0.1)]'
@@ -434,7 +434,7 @@ export function BorrowModalContent({ onClose, pool, isEmbedded = false, initialT
                         )}
                         {step === 'approving' && (<motion.div key="approving" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3"><Loader2 className="w-6 h-6 animate-spin" /><span className="uppercase italic">Permissioning...</span></motion.div>)}
                         {step === 'mining' && (<motion.div key="mining" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-3"><Loader2 className="w-6 h-6 animate-spin" /><span className="uppercase italic">Broadcasting...</span></motion.div>)}
-                        {step === 'success' && (<motion.div key="success" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-3 text-white uppercase italic"><div className="bg-white text-emerald-500 rounded-full p-1"><Check className="w-5 h-5 stroke-[4]" /></div><span>Complete</span></motion.div>)}
+                        {step === 'success' && (<motion.div key="success" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="flex items-center gap-3 text-white uppercase italic"><div className="bg-white text-blue-500 rounded-full p-1"><Check className="w-5 h-5 stroke-[4]" /></div><span>Complete</span></motion.div>)}
                     </AnimatePresence>
                 </Button>
             </div>
@@ -452,3 +452,4 @@ export function BorrowModal({ isOpen, onClose, pool }: BorrowModalProps) {
         </Dialog>
     );
 }
+

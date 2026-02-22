@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useMemo, useEffect, useRef } from 'react';
 import { useYields } from "@/hooks/useYields";
@@ -72,10 +72,10 @@ export function LendHeader() {
     }, [yields]);
 
     return (
-        <div className="relative w-full rounded-3xl p-[1px] bg-gradient-to-r from-white/10 via-[#CEFF00]/30 to-white/10 mb-4 md:mb-8 overflow-hidden font-outfit shadow-2xl">
+        <div className="relative w-full rounded-3xl p-[1px] bg-gradient-to-r from-white/10 via-[#3B82F6]/30 to-white/10 mb-4 md:mb-8 overflow-hidden font-outfit shadow-2xl">
             <div className="relative w-full h-full rounded-3xl bg-[#09090b]/80 backdrop-blur-xl p-3 md:p-8 overflow-hidden">
                 {/* Background Gradient/Glow */}
-                <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-[#CEFF00]/10 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-[#3B82F6]/10 rounded-full blur-[80px] pointer-events-none" />
                 <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none" />
 
                 <div className="relative z-10 flex flex-col items-center text-center w-full">
@@ -86,7 +86,7 @@ export function LendHeader() {
                         </div>
 
                         <h1 className="text-xl md:text-3xl font-bold text-white tracking-tight">
-                            <span className="text-white">ArbiLoop</span> <span className="text-[#CEFF00]">Lend</span>
+                            <span className="text-white">ArbiLoop</span> <span className="text-[#3B82F6]">Lend</span>
                         </h1>
                     </div>
 
@@ -112,7 +112,7 @@ export function LendHeader() {
                             <span className="text-[8px] md:text-xs text-muted-foreground uppercase tracking-wider font-bold mb-1 opacity-70">
                                 Available
                             </span>
-                            <div className="text-sm md:text-2xl font-bold text-emerald-400 tracking-tight">
+                            <div className="text-sm md:text-2xl font-bold text-blue-400 tracking-tight">
                                 <Counter value={metrics.totalAvailable} prefix="$" />
                             </div>
                         </div>
@@ -142,7 +142,7 @@ export function LendHeader() {
                                     <span className="text-[9px] md:text-xs font-bold uppercase tracking-wider text-muted-foreground opacity-70">Utilization</span>
                                     <span className={cn(
                                         "text-sm md:text-xl font-black leading-none",
-                                        isUtilizationHigh ? "text-red-400" : "text-[#CEFF00]"
+                                        isUtilizationHigh ? "text-red-400" : "text-[#3B82F6]"
                                     )}>
                                         {utilization.toFixed(1)}%
                                     </span>
@@ -153,7 +153,7 @@ export function LendHeader() {
                                 <motion.div
                                     className={cn(
                                         "h-full rounded-full bg-gradient-to-r",
-                                        isUtilizationHigh ? "from-red-500 to-orange-500" : "from-[#CEFF00] to-emerald-400"
+                                        isUtilizationHigh ? "from-red-500 to-orange-500" : "from-[#3B82F6] to-blue-400"
                                     )}
                                     initial={{ width: 0 }}
                                     animate={{ width: `${Math.min(utilization, 100)}%` }}
@@ -178,4 +178,5 @@ export function LendHeader() {
         </div>
     );
 }
+
 

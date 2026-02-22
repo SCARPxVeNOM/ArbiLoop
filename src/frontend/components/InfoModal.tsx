@@ -22,8 +22,8 @@ export function InfoModal({ isOpen, onClose }: InfoModalProps) {
                 <div className="p-6 md:p-8 space-y-6">
                     <DialogHeader>
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-[#CEFF00]/10 rounded-xl">
-                                <HelpCircle className="w-6 h-6 text-[#CEFF00]" />
+                            <div className="p-2 bg-[#3B82F6]/10 rounded-xl">
+                                <HelpCircle className="w-6 h-6 text-[#3B82F6]" />
                             </div>
                             <DialogTitle className="text-2xl font-black tracking-tight">How it works</DialogTitle>
                         </div>
@@ -34,15 +34,15 @@ export function InfoModal({ isOpen, onClose }: InfoModalProps) {
 
                     <div className="space-y-4">
                         {/* Earn Section */}
-                        <div className="group bg-white/[0.03] border border-white/5 rounded-2xl p-4 transition-all hover:bg-white/[0.05] hover:border-emerald-500/20">
+                        <div className="group bg-white/[0.03] border border-white/5 rounded-2xl p-4 transition-all hover:bg-white/[0.05] hover:border-blue-500/20">
                             <div className="flex items-start gap-4">
-                                <div className="p-2.5 bg-emerald-500/10 rounded-xl mt-1">
-                                    <HandCoins className="w-5 h-5 text-emerald-400" />
+                                <div className="p-2.5 bg-blue-500/10 rounded-xl mt-1">
+                                    <HandCoins className="w-5 h-5 text-blue-400" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-white mb-1 flex items-center gap-2">
                                         Earning Yield
-                                        <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-emerald-400 transition-colors" />
+                                        <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-blue-400 transition-colors" />
                                     </h4>
                                     <p className="text-xs text-muted-foreground leading-relaxed">
                                         Deposit your idle assets into audited protocols like Aave and Radiant. Your assets earn interest from borrowers and protocol rewards.
@@ -70,15 +70,15 @@ export function InfoModal({ isOpen, onClose }: InfoModalProps) {
                         </div>
 
                         {/* Safety Section */}
-                        <div className="group bg-white/[0.03] border border-white/5 rounded-2xl p-4 transition-all hover:bg-white/[0.05] hover:border-[#CEFF00]/20">
+                        <div className="group bg-white/[0.03] border border-white/5 rounded-2xl p-4 transition-all hover:bg-white/[0.05] hover:border-[#3B82F6]/20">
                             <div className="flex items-start gap-4">
-                                <div className="p-2.5 bg-[#CEFF00]/10 rounded-xl mt-1">
-                                    <ShieldCheck className="w-5 h-5 text-[#CEFF00]" />
+                                <div className="p-2.5 bg-[#3B82F6]/10 rounded-xl mt-1">
+                                    <ShieldCheck className="w-5 h-5 text-[#3B82F6]" />
                                 </div>
                                 <div>
                                     <h4 className="font-bold text-white mb-1 flex items-center gap-2">
                                         Safety First
-                                        <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-[#CEFF00] transition-colors" />
+                                        <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:text-[#3B82F6] transition-colors" />
                                     </h4>
                                     <p className="text-xs text-muted-foreground leading-relaxed">
                                         We monitor protocol health in real-time. ArbiLoop helps you manage risk by providing a global health score and individual protocol alerts.
@@ -91,7 +91,7 @@ export function InfoModal({ isOpen, onClose }: InfoModalProps) {
                     <div className="pt-2">
                         <button
                             onClick={onClose}
-                            className="w-full py-3 rounded-xl bg-[#CEFF00] text-black font-bold text-sm hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(206,255,0,0.2)]"
+                            className="w-full py-3 rounded-xl bg-[#3B82F6] text-white font-bold text-sm hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(59,130,246,0.2)]"
                         >
                             Got it, thanks!
                         </button>
@@ -99,9 +99,10 @@ export function InfoModal({ isOpen, onClose }: InfoModalProps) {
                 </div>
 
                 {/* Decorative bottom gradient */}
-                <div className="h-1.5 w-full bg-gradient-to-r from-emerald-500 via-[#CEFF00] to-blue-500" />
+                <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-[#3B82F6] to-blue-500" />
             </DialogContent>
         </Dialog>
     );
 }
+
 

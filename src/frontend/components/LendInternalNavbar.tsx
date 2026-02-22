@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 
 import { usePathname } from 'next/navigation';
@@ -32,7 +32,7 @@ export function LendInternalNavbar() {
                             {isActive && (
                                 <motion.div
                                     layoutId="active-lend-pill"
-                                    className="absolute inset-0 bg-[#CEFF00] rounded-full -z-10 shadow-[0_0_20px_rgba(206,255,0,0.3)]"
+                                    className="absolute inset-0 bg-[#3B82F6] rounded-full -z-10 shadow-[0_0_20px_rgba(59,130,246,0.3)]"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}
@@ -45,3 +45,4 @@ export function LendInternalNavbar() {
         </div>
     );
 }
+

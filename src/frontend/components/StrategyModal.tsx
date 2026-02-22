@@ -224,7 +224,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
         const supplyAssetAddr = getUnderlyingAddress(tokenA, protocol) as `0x${string}`;
         const borrowAssetAddr = getUnderlyingAddress(tokenB, protocol) as `0x${string}`;
 
-        // Input token — what the user actually sends (could differ from supplyAsset)
+        // Input token â€” what the user actually sends (could differ from supplyAsset)
         // If inputToken === tokenA (supply asset), no extra swap. Otherwise contract swaps.
         // For native ETH, use address(0).
         const inputTokenAddr = (inputToken === 'ETH')
@@ -287,7 +287,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
 
         // --- Calculate amounts in supplyAsset terms ---
         // When paying with native token (or any non-supply token), the contract will swap
-        // inputToken → supplyAsset. We estimate the supply equivalent based on USD prices.
+        // inputToken â†’ supplyAsset. We estimate the supply equivalent based on USD prices.
         const inputValueUSD = tokenAmount * priceInput;
         const supplyEquivalent = priceA > 0 ? inputValueUSD / priceA : tokenAmount;
 
@@ -522,7 +522,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                         {/* 1. Selection Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
-                                <span className="flex items-center gap-2 text-[#CEFF00] mb-2 font-bold text-sm uppercase tracking-widest">
+                                <span className="flex items-center gap-2 text-[#3B82F6] mb-2 font-bold text-sm uppercase tracking-widest">
                                     Your Deposit
                                 </span>
                                 <div className="space-y-3">
@@ -536,7 +536,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                                                 value={amount}
                                                 onChange={(e) => setAmount(e.target.value)}
                                                 placeholder={`e.g. 10`}
-                                                className={`w-full h-12 px-4 rounded-xl border ${isInsufficient ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-[#CEFF00]/50'} bg-white/5 text-white font-bold text-lg focus:outline-none focus:ring-1 ${isInsufficient ? 'focus:ring-red-500/30' : 'focus:ring-[#CEFF00]/30'} transition-colors placeholder:text-white/20`}
+                                                className={`w-full h-12 px-4 rounded-xl border ${isInsufficient ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-[#3B82F6]/50'} bg-white/5 text-white font-bold text-lg focus:outline-none focus:ring-1 ${isInsufficient ? 'focus:ring-red-500/30' : 'focus:ring-[#3B82F6]/30'} transition-colors placeholder:text-white/20`}
                                             />
                                         </div>
                                         <div className="w-[120px] shrink-0">
@@ -571,7 +571,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                                                         const bal = parseFloat(walletBalanceFormatted || '0');
                                                         setAmount((bal * 0.5).toFixed(6));
                                                     }}
-                                                    className="text-[10px] font-bold text-muted-foreground hover:text-[#CEFF00] hover:underline cursor-pointer transition-colors"
+                                                    className="text-[10px] font-bold text-muted-foreground hover:text-[#3B82F6] hover:underline cursor-pointer transition-colors"
                                                 >
                                                     50%
                                                 </button>
@@ -579,7 +579,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                                                     onClick={() => {
                                                         setAmount(truncateAmount(walletBalanceFormatted || '0'));
                                                     }}
-                                                    className="text-[10px] font-bold text-[#CEFF00] hover:underline cursor-pointer"
+                                                    className="text-[10px] font-bold text-[#3B82F6] hover:underline cursor-pointer"
                                                 >
                                                     {truncateAmount(walletBalanceFormatted || '0')} {inputToken} (Max)
                                                 </button>
@@ -590,13 +590,13 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                             </div>
 
                             <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
-                                <span className="flex items-center gap-2 text-[#CEFF00] mb-2 font-bold text-sm uppercase tracking-widest">
+                                <span className="flex items-center gap-2 text-[#3B82F6] mb-2 font-bold text-sm uppercase tracking-widest">
                                     Strategy Config
                                 </span>
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
                                         <span className="font-bold text-white text-sm">Target Leverage</span>
-                                        <span className="text-xl font-black text-[#CEFF00] font-mono">{leverage.toFixed(2)}x</span>
+                                        <span className="text-xl font-black text-[#3B82F6] font-mono">{leverage.toFixed(2)}x</span>
                                     </div>
                                     <input
                                         type="range"
@@ -605,7 +605,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                                         step="0.1"
                                         value={leverage}
                                         onChange={(e) => setLeverage(parseFloat(e.target.value))}
-                                        className="w-full accent-[#CEFF00] h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
+                                        className="w-full accent-[#3B82F6] h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
                                     />
                                     <div className="flex justify-between text-[10px] font-black uppercase text-muted-foreground tracking-widest">
                                         <span>Safe</span>
@@ -619,16 +619,16 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col items-center justify-center">
                                 <span className="text-[10px] uppercase text-muted-foreground mb-1 font-bold">Net APY</span>
-                                <span className="text-lg font-bold text-[#CEFF00]">+{netApy.toFixed(2)}%</span>
+                                <span className="text-lg font-bold text-[#3B82F6]">+{netApy.toFixed(2)}%</span>
                                 <div className="flex gap-2 text-[9px] text-muted-foreground mt-1">
-                                    <span className="text-emerald-400">Supply: +{(poolA?.apy || 0).toFixed(2)}%</span>
+                                    <span className="text-blue-400">Supply: +{(poolA?.apy || 0).toFixed(2)}%</span>
                                     <span className="text-white/20">|</span>
                                     <span className="text-red-400">Borrow: -{(poolB?.apyBaseBorrow || 0).toFixed(2)}%</span>
                                 </div>
                             </div>
                             <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 flex flex-col items-center">
                                 <span className="text-[10px] uppercase text-muted-foreground mb-1 font-bold">Health Factor</span>
-                                <span className={`text-lg font-bold ${healthFactor > 1.5 ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                <span className={`text-lg font-bold ${healthFactor > 1.5 ? 'text-blue-400' : 'text-amber-400'}`}>
                                     {healthFactor > 100 ? '>100' : healthFactor.toFixed(2)}
                                 </span>
                             </div>
@@ -643,10 +643,10 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                         </div>
 
                         {/* 3. Beta Warning */}
-                        <div className="bg-[#CEFF00]/10 border border-[#CEFF00]/20 rounded-xl p-4 flex gap-3">
-                            <Layers className="w-5 h-5 text-[#CEFF00] shrink-0" />
+                        <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/20 rounded-xl p-4 flex gap-3">
+                            <Layers className="w-5 h-5 text-[#3B82F6] shrink-0" />
                             <div className="space-y-1">
-                                <h4 className="font-bold text-[#CEFF00] text-sm">Mainnet Execution Ready</h4>
+                                <h4 className="font-bold text-[#3B82F6] text-sm">Mainnet Execution Ready</h4>
                                 <p className="text-xs text-muted-foreground">
                                     This strategy will be executed on-chain via our secure vault contract.
                                 </p>
@@ -670,7 +670,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                                         <div key={p.time} className="flex justify-between items-center p-4 hover:bg-white/[0.02] transition-colors">
                                             <span className="text-sm text-muted-foreground">{p.label}</span>
                                             <div className="text-right">
-                                                <div className="font-bold text-[#CEFF00] font-mono">
+                                                <div className="font-bold text-[#3B82F6] font-mono">
                                                     +${p.value.toFixed(2)}
                                                 </div>
                                                 <div className="text-[10px] text-muted-foreground">
@@ -688,7 +688,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
                     <div className="sticky bottom-0 left-0 w-full p-4 md:p-6 bg-[#0f0f12]/95 backdrop-blur-xl border-t border-white/10 z-30 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.5)] flex flex-col gap-3">
                         {!address ? (
                             <Button
-                                className="w-full h-12 bg-[#CEFF00] text-black border-none hover:bg-[#b8e600] font-bold"
+                                className="w-full h-12 bg-[#3B82F6] text-white border-none hover:bg-[#2563EB] font-bold"
                                 onClick={() => openConnectModal?.()}
                             >
                                 Connect Wallet to Execute
@@ -698,7 +698,7 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
 
                                 <Button
                                     disabled={isExecuting || !principalUSD}
-                                    className="w-full h-12 bg-[#CEFF00] text-black border-none hover:bg-[#b8e600] font-bold relative overflow-hidden group shadow-[0_0_20px_-5px_#CEFF00]"
+                                    className="w-full h-12 bg-[#3B82F6] text-white border-none hover:bg-[#2563EB] font-bold relative overflow-hidden group shadow-[0_0_20px_-5px_#3B82F6]"
                                     onClick={handleExecute}
                                 >
                                     {isExecuting ? (
@@ -732,3 +732,4 @@ export function StrategyModal({ isOpen, onClose, initialData }: StrategyModalPro
         </>
     );
 }
+
