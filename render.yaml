@@ -1,0 +1,36 @@
+services:
+  - type: worker
+    name: arbiloop-telegram-worker
+    runtime: node
+    rootDir: src/bot
+    plan: starter
+    buildCommand: npm ci
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ARBITRUM_RPC_URL
+        value: https://arb1.arbitrum.io/rpc
+      - key: NEXT_PUBLIC_TARGET_CHAIN
+        value: arbitrum
+      - key: NEXT_PUBLIC_AAVE_POOL_ADDRESS
+        value: 0x794a61358D6845594F94dc1DB02A252b5b4814aD
+      - key: NEXT_PUBLIC_RADIANT_POOL_ADDRESS
+        value: 0xE23B4AE3624fB6f7cDEF29bC8EAD912f1Ede6886
+      - key: MONITOR_TICK_MS
+        value: "60000"
+      - key: ALERT_COOLDOWN_MINUTES
+        value: "60"
+      - key: DAILY_REPORT_INTERVAL_MS
+        value: "86400000"
+      - key: ENABLE_PNL_INDEXER
+        value: "true"
+      - key: PNL_INDEXER_INTERVAL_MS
+        value: "600000"

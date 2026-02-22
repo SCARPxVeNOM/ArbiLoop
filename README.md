@@ -22,5 +22,6 @@ npm run dev
 
 ## Deployment Docs
 - `docs/ARBITRUM_HACKATHON.md`
+- `docs/DEPLOY_VERCEL_RENDER.md`
 - `src/contracts/README.md`
 - `src/bot/README.md`
