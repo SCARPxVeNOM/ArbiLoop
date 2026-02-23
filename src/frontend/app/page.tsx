@@ -43,7 +43,7 @@ export default function LandingPage() {
 
               <p className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
                 Stop staring at charts. Let our autonomous AI agent monitor your DeFi health 24/7.
-                Get "Good Vibes Only" with automated risk alerts and stress-free yield optimization.
+                Get Safe with automated risk alerts and stress-free yield optimization.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -128,7 +128,7 @@ export default function LandingPage() {
           {/* Features Section */}
           <div className="py-16 md:py-32 border-t border-white/5">
             <div className="text-center max-w-2xl mx-auto mb-20 space-y-4">
-              <h2 className="text-4xl font-bold font-outfit">Good Vibes Only.</h2>
+              
               <p className="text-muted-foreground text-lg">
                 We stripped away the complexity of DeFi and built a stress-free interface powered by AI.
               </p>
